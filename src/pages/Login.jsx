@@ -43,7 +43,7 @@ export default function Login() {
       return
     }
 
-    setLoading(true)
+    setLoading(true) // Fixed state function call
     try {
       await login(username.trim(), password)
       navigate('/dashboard', { replace: true })
@@ -55,14 +55,10 @@ export default function Login() {
     }
   }
 
-  const handleSSOClick = (provider) => {
-    alert(`${provider} SSO integration — configure OAuth redirect URI in your ${provider} app settings.`)
-  }
-
   return (
     <div style={{
       minHeight: '100vh', display: 'flex',
-      background: 'linear-gradient(160deg, #0d1117 0%, #0d3d38 100%)',
+      // background: 'linear-gradient(160deg, #0d1117 0%, #0d3d38 100%)',
     }}>
       {/* Integrated Font & Action Button Mechanics */}
       <style>{`
@@ -100,15 +96,42 @@ export default function Login() {
       `}</style>
 
       <div className="sp-login-root">
-        {/* Left panel */}
+        {/* Left panel - Customer Journey / Experience Content Background */}
         <div style={{
-          flex: 1, display: 'none',
-          alignItems: 'center', justifyContent: 'center',
-          padding: '60px',
+          flex: 1.2, 
+          display: 'none',
+          position: 'relative',
+          flexDirection: 'column',
+          alignItems: 'flex-start', 
+          justifyContent: 'flex-end',
+          padding: '80px 60px',
+          backgroundImage: `linear-gradient(to top, rgba(13, 17, 23, 0.95) 0%, rgba(13, 61, 56, 0.4) 100%), url('https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1200&q=80')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
         }}
           className="left-panel"
         >
-          {/* decorative content on desktop */}
+          <div style={{ position: 'relative', zIndex: 2, maxWidth: 480 }}>
+            <h2 style={{
+              fontFamily: 'var(--font-display)',
+              color: '#fff',
+              fontSize: 32,
+              fontWeight: 700,
+              lineHeight: 1.25,
+              marginBottom: 16,
+              letterSpacing: '-0.5px'
+            }}>
+              Understand every step of your customer's journey.
+            </h2>
+            <p style={{
+              color: 'rgba(255,255,255,0.7)',
+              fontSize: 16,
+              lineHeight: 1.6,
+              fontWeight: 400
+            }}>
+              Analyze feedback metrics, map interactions, and build high-impact experience funnels with SurveyPulse.
+            </p>
+          </div>
         </div>
 
         {/* Right panel — form */}
@@ -116,10 +139,11 @@ export default function Login() {
           flex: 1, minHeight: '100vh',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           padding: '40px 24px',
+          zIndex: 2,
         }}>
           <div style={{
             width: '100%', maxWidth: 440,
-            background: 'var(--white)', borderRadius: 24,
+            background: 'var(--white, #ffffff)', borderRadius: 24,
             padding: '48px 44px',
             boxShadow: '0 32px 80px rgba(0,0,0,0.35)',
           }}>
@@ -134,66 +158,9 @@ export default function Login() {
               }}>S</span>
               <span style={{
                 fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 18,
-                color: 'var(--ink)', letterSpacing: '-0.3px',
+                color: 'var(--ink, #0f172a)', letterSpacing: '-0.3px',
               }}>SurveyPulse</span>
             </Link>
-
-            {/* <h1 style={{
-              fontFamily: 'var(--font-display)', fontSize: 26, fontWeight: 800,
-              color: 'var(--ink)', letterSpacing: '-0.5px', marginBottom: 6,
-            }}>Welcome back</h1>
-            <p style={{ fontSize: 14, color: 'var(--muted)', marginBottom: 32, lineHeight: 1.5, fontWeight: 400 }}>
-              Sign in to your account to continue
-            </p> */}
-
-            {/* SSO Buttons */}
-            {/* <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 28 }}>
-              <button
-                onClick={() => handleSSOClick('Microsoft')}
-                style={{
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-                  padding: '11px 16px', borderRadius: 10, fontSize: 14, fontWeight: 500,
-                  background: 'var(--white)', color: 'var(--ink)',
-                  border: '1px solid var(--border)',
-                  boxShadow: 'var(--shadow-sm)',
-                  transition: 'all 0.2s',
-                  fontFamily: 'var(--font-display)',
-                  cursor: 'pointer'
-                }}
-                onMouseEnter={e => e.currentTarget.style.background = 'var(--surface)'}
-                onMouseLeave={e => e.currentTarget.style.background = 'var(--white)'}
-              >
-                <MicrosoftIcon />
-                Continue with Microsoft
-              </button>
-              <button
-                onClick={() => handleSSOClick('Google')}
-                style={{
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-                  padding: '11px 16px', borderRadius: 10, fontSize: 14, fontWeight: 500,
-                  background: 'var(--white)', color: 'var(--ink)',
-                  border: '1px solid var(--border)',
-                  boxShadow: 'var(--shadow-sm)',
-                  transition: 'all 0.2s',
-                  fontFamily: 'var(--font-display)',
-                  cursor: 'pointer'
-                }}
-                onMouseEnter={e => e.currentTarget.style.background = 'var(--surface)'}
-                onMouseLeave={e => e.currentTarget.style.background = 'var(--white)'}
-              >
-                <GoogleIcon />
-                Continue with Google
-              </button>
-            </div> */}
-
-            {/* Divider */}
-            {/* <div style={{
-              display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28,
-            }}>
-              <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
-              <span style={{ fontSize: 12, color: 'var(--muted)', fontWeight: 500, letterSpacing: '0.02em' }}>or sign in with email</span>
-              <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
-            </div> */}
 
             {/* Error banner */}
             {error && (
@@ -213,7 +180,7 @@ export default function Login() {
               <div>
                 <label style={{
                   display: 'block', fontSize: 13, fontWeight: 600,
-                  color: 'var(--ink-soft)', marginBottom: 6,
+                  color: 'var(--ink-soft, #475569)', marginBottom: 6,
                 }}>Username / Email</label>
                 <input
                   type="text"
@@ -223,24 +190,24 @@ export default function Login() {
                   autoComplete="username"
                   style={{
                     width: '100%', padding: '11px 14px', borderRadius: 9,
-                    border: '1.5px solid var(--border)', fontSize: 14,
-                    color: 'var(--ink)', background: 'var(--surface)',
+                    border: '1.5px solid var(--border, #e2e8f0)', fontSize: 14,
+                    color: 'var(--ink, #0f172a)', background: 'var(--surface, #f8fafc)',
                     outline: 'none', transition: 'border-color 0.2s',
                     boxSizing: 'border-box',
                     fontFamily: 'inherit'
                   }}
-                  onFocus={e => e.target.style.borderColor = 'var(--teal)'}
-                  onBlur={e => e.target.style.borderColor = 'var(--border)'}
+                  onFocus={e => e.target.style.borderColor = 'var(--teal, #0d9488)'}
+                  onBlur={e => e.target.style.borderColor = 'var(--border, #e2e8f0)'}
                 />
               </div>
 
               {/* Password */}
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                  <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-soft)' }}>
+                  <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-soft, #475569)' }}>
                     Password
                   </label>
-                  <span style={{ fontSize: 12, color: 'var(--teal)', cursor: 'pointer', fontWeight: 600 }}>
+                  <span style={{ fontSize: 12, color: 'var(--teal, #0d9488)', cursor: 'pointer', fontWeight: 600 }}>
                     Forgot password?
                   </span>
                 </div>
@@ -253,14 +220,14 @@ export default function Login() {
                     autoComplete="current-password"
                     style={{
                       width: '100%', padding: '11px 40px 11px 14px', borderRadius: 9,
-                      border: '1.5px solid var(--border)', fontSize: 14,
-                      color: 'var(--ink)', background: 'var(--surface)',
+                      border: '1.5px solid var(--border, #e2e8f0)', fontSize: 14,
+                      color: 'var(--ink, #0f172a)', background: 'var(--surface, #f8fafc)',
                       outline: 'none', transition: 'border-color 0.2s',
                       boxSizing: 'border-box',
                       fontFamily: 'inherit'
                     }}
-                    onFocus={e => e.target.style.borderColor = 'var(--teal)'}
-                    onBlur={e => e.target.style.borderColor = 'var(--border)'}
+                    onFocus={e => e.target.style.borderColor = 'var(--teal, #0d9488)'}
+                    onBlur={e => e.target.style.borderColor = 'var(--border, #e2e8f0)'}
                   />
                   <button
                     type="button"
@@ -268,7 +235,7 @@ export default function Login() {
                     style={{
                       position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
                       background: 'none', border: 'none', padding: 0,
-                      color: 'var(--muted)', fontSize: 16, cursor: 'pointer',
+                      color: 'var(--muted, #64748b)', fontSize: 16, cursor: 'pointer',
                     }}
                   >
                     {showPass ? '🙈' : '👁'}
@@ -283,9 +250,9 @@ export default function Login() {
                 className="sp-submit-btn"
                 style={{
                   background: loading
-                    ? 'var(--border)'
+                    ? 'var(--border, #e2e8f0)'
                     : 'linear-gradient(135deg, #0d9488, #0f766e)',
-                  color: loading ? 'var(--muted)' : '#fff',
+                  color: loading ? 'var(--muted, #64748b)' : '#fff',
                   boxShadow: loading ? 'none' : '0 4px 16px rgba(13,148,136,0.35)',
                   cursor: loading ? 'not-allowed' : 'pointer',
                 }}
@@ -293,16 +260,6 @@ export default function Login() {
                 {loading ? 'Signing in…' : 'Log in →'}
               </button>
             </form>
-
-            {/* <p style={{
-              textAlign: 'center', marginTop: 28, fontSize: 13, color: 'var(--muted)',
-              fontWeight: 400
-            }}>
-              Don't have an account?{' '}
-              <Link to="/login" style={{ color: 'var(--teal)', fontWeight: 600, textDecoration: 'none' }}>
-                Sign up free
-              </Link>
-            </p> */}
           </div>
         </div>
       </div>
