@@ -29,14 +29,14 @@ const TEAM = [
     name: 'Gourab',
     role: 'Senior Director of SurveyPulse',
     company: 'STC',
-    image: '/G07A3881.JPG',
+    image: '/G07A3895.JPG',
     accent: '#7c3aed',
   },
   {
     name: 'Abdul Rahman',
     role: 'Research Lead of SurveyPulse',
     company: 'NEOM',
-    image: 'G07A3895.JPG',
+    image: '/G07A3881.JPG',
     accent: '#d97706',
   },
 ]
