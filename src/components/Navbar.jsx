@@ -74,7 +74,7 @@ export default function Navbar({ dark = false }) {
               border: `1px solid ${dark ? 'rgba(255,255,255,0.2)' : 'var(--border)'}`,
               color: dark ? 'rgba(255,255,255,0.8)' : 'var(--ink)',
               transition: 'all 0.2s',
-            }}>Sign out</button>
+            }}>log out</button>
           </div>
         ) : (
           <div style={{ display: 'flex', gap: 8, marginLeft: 8 }}>
@@ -85,13 +85,13 @@ export default function Navbar({ dark = false }) {
               color: dark ? 'rgba(255,255,255,0.8)' : 'var(--ink)',
               transition: 'all 0.2s',
             }}>Log in</Link>
-            <Link to="/login" style={{
+            {/* <Link to="/login" style={{
               padding: '7px 18px', borderRadius: 8, fontSize: 14, fontWeight: 600,
               background: 'linear-gradient(135deg, var(--teal), #0f766e)',
               color: '#fff', border: 'none',
               boxShadow: '0 2px 8px rgba(13,148,136,0.35)',
               transition: 'all 0.2s',
-            }}>Sign up</Link>
+            }}>Sign up</Link> */}
           </div>
         )}
       </div>
