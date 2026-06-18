@@ -19,24 +19,24 @@ const STATS = [
 
 const TEAM = [
   {
-    name: 'Abdul Vaqeel',
+    name: 'Abdul',
     role: 'Founder & Head of SurveyPulse',
     // company: 'Noon Commerce',
-    image: '/Professional_pic.jpeg',
+    image: '/IT_1.jpg',
     accent: '#0d9488',
   },
   {
-    name: 'Gourab',
+    name: 'Sara',
     role: 'Senior Director of SurveyPulse',
     // company: 'STC',
-    image: '/G07A3895.JPG',
+    image: '/IT_2.jpg',
     accent: '#7c3aed',
   },
   {
-    name: 'Abdul Rahman',
+    name: 'Rafiq',
     role: 'Research Lead of SurveyPulse',
     // company: 'NEOM',
-    image: '/G07A3881.JPG',
+    image: '/IT_3.jpg',
     accent: '#d97706',
   },
 ]

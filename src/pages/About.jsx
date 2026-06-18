@@ -2,10 +2,10 @@ import Navbar from '../components/Navbar'
 import { Link } from 'react-router-dom'
 
 const TEAM = [
-  { name: 'Syed Abrar', role: 'Chief Scientific Officer (CSO)', avatar: 'S' },
-  { name: 'Aleem', role: 'Chief Research Officer (CRO)', avatar: 'A' },
-  { name: 'Swamy', role: 'Head of Product', avatar: 'K' },
-  { name: 'Failur', role: 'Head of Design', avatar: 'N' },
+  { name: 'Athiq', role: 'Chief Scientific Officer (CSO)', avatar: 'A' },
+  { name: 'Nawaz', role: 'Chief Research Officer (CRO)', avatar: 'N' },
+  { name: 'Rafiya', role: 'Head of Product', avatar: 'R' },
+  { name: 'Johny', role: 'Head of Design', avatar: 'J' },
 ]
 
 export default function About() {
