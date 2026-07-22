@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-   baseURL: import.meta.env.VITE_API_URL,
+  baseURL: 'http://18.215.251.238:8001',
   headers: { 'Content-Type': 'application/json' },
 })
 // Attach JWT token to every request automatically
