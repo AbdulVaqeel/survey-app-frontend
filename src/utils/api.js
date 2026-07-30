@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'http://54.82.127.131:8001',
+  baseURL: 'https://surveymatrix.tech/api',
   headers: { 'Content-Type': 'application/json' },
 })
 // Attach JWT token to every request automatically
