@@ -2,42 +2,56 @@ import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../utils/useAuth'
 
-const MOCK_SURVEYS  = [
-  { id: 1, title: 'Customer Satisfaction Q2',  status: 'active',  responses: 142, completion: 78 },
-  { id: 2, title: 'NPS – Enterprise Clients',   status: 'active',  responses: 89,  completion: 62 },
-  { id: 3, title: 'Onboarding Experience 2025', status: 'closed',  responses: 310, completion: 95 },
-  { id: 4, title: 'Product Feedback – v3.0',    status: 'draft',   responses: 0,   completion: 0  },
-  { id: 5, title: 'Employee Engagement H1',     status: 'active',  responses: 54,  completion: 41 },
-  { id: 6, title: 'Website UX Audit',           status: 'draft',   responses: 0,   completion: 0  },
+const MOCK_SURVEYS = [
+  { id: 1, title: 'Customer Satisfaction Q2', status: 'active', responses: 142, completion: 78 },
+  { id: 2, title: 'NPS – Enterprise Clients', status: 'active', responses: 89, completion: 62 },
+  { id: 3, title: 'Onboarding Experience 2025', status: 'closed', responses: 310, completion: 95 },
+  { id: 4, title: 'Product Feedback – v3.0', status: 'draft', responses: 0, completion: 0 },
+  { id: 5, title: 'Employee Engagement H1', status: 'active', responses: 54, completion: 41 },
+  { id: 6, title: 'Website UX Audit', status: 'draft', responses: 0, completion: 0 },
 ]
+
 const MOCK_ACTIVITY = [
   { id: 1, icon: '📬', text: 'New response on Customer Satisfaction Q2', time: '2 min ago' },
-  { id: 2, icon: '🆕', text: 'Survey "NPS – Enterprise Clients" created',  time: '1 hr ago'  },
+  { id: 2, icon: '🆕', text: 'Survey "NPS – Enterprise Clients" created', time: '1 hr ago' },
   { id: 3, icon: '✅', text: '"Onboarding Experience 2025" closed successfully', time: '3 hrs ago' },
-  { id: 4, icon: '📤', text: 'Export for Product Feedback downloaded',    time: 'Yesterday'  },
+  { id: 4, icon: '📤', text: 'Export for Product Feedback downloaded', time: 'Yesterday' },
+]
+
+const MOCK_RESPONDENTS = [
+  { id: 1, name: 'Sarah Jenkins', email: 's.jenkins@acme.corp', survey: 'Customer Satisfaction Q2', status: 'Completed', date: '10 min ago' },
+  { id: 2, name: 'Michael Chen', email: 'mchen@techcorp.io', survey: 'NPS – Enterprise Clients', status: 'Completed', date: '45 min ago' },
+  { id: 3, name: 'Elena Rostova', email: 'elena@designstudio.co', survey: 'Customer Satisfaction Q2', status: 'In Progress', date: '2 hrs ago' },
+  { id: 4, name: 'David Kim', email: 'dkim@globalbank.com', survey: 'Onboarding Experience 2025', status: 'Completed', date: '5 hrs ago' },
 ]
 
 const STATUS_COLORS = {
   active: { bg: '#dcfce7', text: '#16a34a' },
-  draft:  { bg: '#fef9c3', text: '#a16207' },
+  draft: { bg: '#fef9c3', text: '#a16207' },
   closed: { bg: '#f1f5f9', text: '#64748b' },
 }
-const TABS      = ['All', 'Active', 'Draft', 'Closed']
+
+const TABS = ['All', 'Active', 'Draft', 'Closed']
 const NAV_ITEMS = [
-  { icon: '🏠', label: 'Dashboard'   },
-  { icon: '📋', label: 'My Surveys'  },
-  { icon: '📊', label: 'Analytics'   },
+  { icon: '🏠', label: 'Dashboard' },
+  { icon: '📋', label: 'My Surveys' },
+  { icon: '📊', label: 'Analytics' },
   { icon: '👥', label: 'Respondents' },
-  { icon: '⚙️', label: 'Settings'    },
+  { icon: '⚙️', label: 'Settings' },
 ]
 
 function StatCard({ icon, label, value, trend, color = '#0d9488' }) {
   return (
-    <div style={{
-      background: '#fff', borderRadius: 16, padding: '20px 18px',
-      border: '1px solid #e2e8f0', flex: '1 1 160px', minWidth: 0,
-      transition: 'box-shadow 0.2s',
-    }}
+    <div
+      style={{
+        background: '#fff',
+        borderRadius: 16,
+        padding: '20px 18px',
+        border: '1px solid #e2e8f0',
+        flex: '1 1 160px',
+        minWidth: 0,
+        transition: 'box-shadow 0.2s',
+      }}
       onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.08)')}
       onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}
     >
@@ -58,13 +72,15 @@ function MiniBar({ pct, color = '#0d9488' }) {
 }
 
 function SurveyModal({ mode, survey, onClose, onSave }) {
-  const [title,  setTitle]  = useState(survey?.title  || '')
+  const [title, setTitle] = useState(survey?.title || '')
   const [status, setStatus] = useState(survey?.status || 'draft')
-  const [error,  setError]  = useState('')
+  const [error, setError] = useState('')
+
   const handleSubmit = () => {
     if (!title.trim()) { setError('Survey title is required.'); return }
     onSave({ title: title.trim(), status })
   }
+
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, backdropFilter: 'blur(2px)', padding: '16px' }} onClick={onClose}>
       <div style={{ background: '#fff', borderRadius: 20, padding: 'clamp(20px,5vw,32px)', width: '100%', maxWidth: 440, boxShadow: '0 20px 60px rgba(0,0,0,0.2)', animation: 'modalIn 0.2s ease' }} onClick={e => e.stopPropagation()}>
@@ -139,30 +155,6 @@ function SurveyDetailModal({ survey, onClose, onEdit, onDelete }) {
   )
 }
 
-function SettingsModal({ user, onClose, onSave }) {
-  const [fullName, setFullName] = useState(user.full_name || '')
-  const [username, setUsername] = useState(user.username  || '')
-  return (
-    <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, backdropFilter: 'blur(2px)', padding: 16 }} onClick={onClose}>
-      <div style={{ background: '#fff', borderRadius: 20, padding: 'clamp(20px,5vw,32px)', width: '100%', maxWidth: 440, boxShadow: '0 20px 60px rgba(0,0,0,0.2)', animation: 'modalIn 0.2s ease' }} onClick={e => e.stopPropagation()}>
-        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 800, color: '#0f172a', marginBottom: 24 }}>⚙️ Settings</h2>
-        {[{ label: 'Full Name', value: fullName, setter: setFullName }, { label: 'Username', value: username, setter: setUsername }].map(({ label, value, setter }) => (
-          <div key={label} style={{ marginBottom: 16 }}>
-            <label style={{ fontSize: 13, fontWeight: 600, color: '#475569', display: 'block', marginBottom: 6 }}>{label}</label>
-            <input value={value} onChange={e => setter(e.target.value)}
-              style={{ width: '100%', padding: '10px 14px', borderRadius: 10, fontSize: 14, border: '1.5px solid #e2e8f0', outline: 'none', boxSizing: 'border-box', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
-              onFocus={e => (e.target.style.borderColor = '#0d9488')} onBlur={e => (e.target.style.borderColor = '#e2e8f0')} />
-          </div>
-        ))}
-        <div style={{ display: 'flex', gap: 10, marginTop: 24 }}>
-          <button onClick={onClose} style={{ flex: 1, padding: 10, borderRadius: 10, fontSize: 14, fontWeight: 600, border: '1.5px solid #e2e8f0', background: '#fff', color: '#64748b', cursor: 'pointer' }}>Cancel</button>
-          <button onClick={() => onSave({ full_name: fullName, username })} style={{ flex: 2, padding: 10, borderRadius: 10, fontSize: 14, fontWeight: 600, border: 'none', background: 'linear-gradient(135deg, #0d9488, #0f766e)', color: '#fff', cursor: 'pointer' }}>Save Changes</button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 function Toast({ message, type, onDone }) {
   useEffect(() => {
     const t = setTimeout(onDone, 3000)
@@ -177,32 +169,41 @@ function Toast({ message, type, onDone }) {
 
 export default function Dashboard() {
   const navigate = useNavigate()
-  // ── Pull real logged-in user from useAuth ──────────────────────────────────
   const { logout, user: authUser } = useAuth()
 
-  // Initialise display user from authUser — falls back gracefully if null
-  const [user,            setUser]           = useState(authUser || { full_name: 'User', username: '' })
-  const [surveys,         setSurveys]        = useState(MOCK_SURVEYS)
-  const [activity,        setActivity]       = useState(MOCK_ACTIVITY)
-  const [activeTab,       setActiveTab]      = useState('All')
-  const [sidebarOpen,     setSidebarOpen]    = useState(false)
-  const [activeNav,       setActiveNav]      = useState('Dashboard')
-  const [searchQuery,     setSearchQuery]    = useState('')
-  const [showProfileMenu, setShowProfileMenu]= useState(false)
-  const [showNewModal,    setShowNewModal]   = useState(false)
-  const [editSurvey,      setEditSurvey]     = useState(null)
-  const [viewSurvey,      setViewSurvey]     = useState(null)
-  const [deleteSurvey,    setDeleteSurvey]   = useState(null)
-  const [showSettings,    setShowSettings]   = useState(false)
-  const [toast,           setToast]          = useState(null)
-  const [isMobile,        setIsMobile]       = useState(window.innerWidth < 768)
+  const [user, setUser] = useState(authUser || { full_name: 'User', username: '' })
+  const [surveys, setSurveys] = useState(MOCK_SURVEYS)
+  const [activity, setActivity] = useState(MOCK_ACTIVITY)
+  const [activeTab, setActiveTab] = useState('All')
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [activeNav, setActiveNav] = useState('Dashboard')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [showProfileMenu, setShowProfileMenu] = useState(false)
+  const [showNewModal, setShowNewModal] = useState(false)
+  const [editSurvey, setEditSurvey] = useState(null)
+  const [viewSurvey, setViewSurvey] = useState(null)
+  const [deleteSurvey, setDeleteSurvey] = useState(null)
+  const [toast, setToast] = useState(null)
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
 
-  // ── Sync display user whenever authUser changes (e.g. after login) ──────────
+  // Settings State
+  const [settingsForm, setSettingsForm] = useState({
+    fullName: user.full_name || '',
+    username: user.username || '',
+    emailNotifications: true,
+  })
+
   useEffect(() => {
-    if (authUser) setUser(authUser)
+    if (authUser) {
+      setUser(authUser)
+      setSettingsForm(prev => ({
+        ...prev,
+        fullName: authUser.full_name || '',
+        username: authUser.username || ''
+      }))
+    }
   }, [authUser])
 
-  // ── Responsive sidebar ───────────────────────────────────────────────────────
   useEffect(() => {
     const onResize = () => {
       const mobile = window.innerWidth < 768
@@ -214,7 +215,6 @@ export default function Dashboard() {
     return () => window.removeEventListener('resize', onResize)
   }, [])
 
-  // ── Click-outside handlers ───────────────────────────────────────────────────
   useEffect(() => {
     const handleClickOutside = e => {
       if (!e.target.closest('.sp-profile-menu')) setShowProfileMenu(false)
@@ -226,26 +226,25 @@ export default function Dashboard() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [isMobile])
 
-  // ── Derived stats ────────────────────────────────────────────────────────────
-  const totalSurveys   = surveys.length
-  const activeSurveys  = surveys.filter(s => s.status === 'active').length
+  const totalSurveys = surveys.length
+  const activeSurveys = surveys.filter(s => s.status === 'active').length
   const responsesToday = surveys.reduce((sum, s) => sum + (s.status === 'active' ? Math.floor(s.responses * 0.08) : 0), 0)
   const completionRate = surveys.length ? Math.round(surveys.reduce((sum, s) => sum + s.completion, 0) / surveys.length) : 0
 
-  const filtered = surveys
+  const filteredSurveys = surveys
     .filter(s => activeTab === 'All' || s.status.toLowerCase() === activeTab.toLowerCase())
     .filter(s => s.title.toLowerCase().includes(searchQuery.toLowerCase()))
 
-  const showToast   = useCallback((message, type = 'success') => setToast({ message, type }), [])
+  const showToast = useCallback((message, type = 'success') => setToast({ message, type }), [])
   const addActivity = useCallback((icon, text) => setActivity(prev => [{ id: Date.now(), icon, text, time: 'Just now' }, ...prev.slice(0, 6)]), [])
 
-  // ── Handlers ─────────────────────────────────────────────────────────────────
   const handleCreateSurvey = data => {
     setSurveys(prev => [{ ...data, id: Date.now(), responses: 0, completion: 0 }, ...prev])
     addActivity('🆕', `Survey "${data.title}" created`)
     setShowNewModal(false)
     showToast(`"${data.title}" created successfully!`)
   }
+
   const handleEditSurvey = data => {
     if (!editSurvey) return
     setSurveys(prev => prev.map(s => s.id === editSurvey.id ? { ...s, ...data } : s))
@@ -253,6 +252,7 @@ export default function Dashboard() {
     setEditSurvey(null); setViewSurvey(null)
     showToast(`"${data.title}" updated successfully!`)
   }
+
   const handleDeleteSurvey = () => {
     if (!deleteSurvey) return
     setSurveys(prev => prev.filter(s => s.id !== deleteSurvey.id))
@@ -260,17 +260,22 @@ export default function Dashboard() {
     setDeleteSurvey(null); setViewSurvey(null)
     showToast(`"${deleteSurvey.title}" deleted.`, 'error')
   }
-  const handleSaveSettings = data => { setUser(data); setShowSettings(false); showToast('Settings saved!') }
+
+  const handleSaveSettings = e => {
+    e.preventDefault()
+    setUser(prev => ({ ...prev, full_name: settingsForm.fullName, username: settingsForm.username }))
+    showToast('Settings updated successfully!')
+  }
+
   const handleNavClick = label => {
     setActiveNav(label)
-    if (label === 'Settings') setShowSettings(true)
     if (isMobile) setSidebarOpen(false)
   }
+
   const handleLogout = () => { setShowProfileMenu(false); logout(); navigate('/login') }
 
-  // ── Safe display values ───────────────────────────────────────────────────────
-  const displayName   = user?.full_name || user?.username || 'User'
-  const displayInitial = displayName[0].toUpperCase()
+  const displayName = user?.full_name || user?.username || 'User'
+  const displayInitial = displayName[0]?.toUpperCase() || 'U'
   const displayUsername = user?.username || ''
 
   return (
@@ -281,9 +286,9 @@ export default function Dashboard() {
         .sp-root { font-family: 'Plus Jakarta Sans', sans-serif; }
         .sp-btn-primary { padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; border: none; font-family: 'Plus Jakarta Sans', sans-serif; background: linear-gradient(135deg, #0d9488, #0f766e); color: #fff; box-shadow: 0 4px 12px rgba(13,148,136,0.3); cursor: pointer; transition: transform 0.15s; white-space: nowrap; }
         .sp-btn-primary:hover { transform: translateY(-1px); }
-        @keyframes modalIn  { from { opacity:0; transform:scale(0.95) translateY(8px); } to { opacity:1; transform:scale(1) translateY(0); } }
-        @keyframes toastIn  { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
-        @keyframes fadeUp   { from { opacity:0; transform:translateY(6px); }  to { opacity:1; transform:translateY(0); } }
+        @keyframes modalIn { from { opacity:0; transform:scale(0.95) translateY(8px); } to { opacity:1; transform:scale(1) translateY(0); } }
+        @keyframes toastIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
         .sp-row { animation: fadeUp 0.22s ease both; }
         .sp-sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 39; }
         @media (max-width: 767px) {
@@ -321,7 +326,7 @@ export default function Dashboard() {
           })}
         </nav>
 
-        {/* Sidebar user strip — shows real logged-in user */}
+        {/* Sidebar user strip */}
         <div style={{ padding: sidebarOpen ? '16px 20px' : '16px', borderTop: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{ width: 32, height: 32, borderRadius: '50%', flexShrink: 0, background: 'linear-gradient(135deg, #0d9488, #f59e0b)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 14 }}>{displayInitial}</div>
           {sidebarOpen && (
@@ -336,17 +341,17 @@ export default function Dashboard() {
         </div>
       </aside>
 
-      {/* Main */}
+      {/* Main Container */}
       <main style={{ flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column', minWidth: 0 }}>
 
         {/* Topbar */}
         <header style={{ padding: '0 16px', height: 64, background: '#fff', borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0, gap: 8 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
             <button className="sp-menu-btn" onClick={() => setSidebarOpen(o => !o)} style={{ background: 'none', border: 'none', fontSize: 18, cursor: 'pointer', color: '#64748b', padding: 4, flexShrink: 0 }}>☰</button>
-            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(15px,3vw,20px)', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Dashboard</h1>
+            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(15px,3vw,20px)', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{activeNav}</h1>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-            {!isMobile && (
+            {!isMobile && activeNav === 'Dashboard' && (
               <div style={{ position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', fontSize: 13, color: '#94a3b8' }}>🔍</span>
                 <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search surveys..."
@@ -356,7 +361,7 @@ export default function Dashboard() {
             )}
             <button className="sp-btn-primary" onClick={() => setShowNewModal(true)}>+ {isMobile ? '' : 'New '}Survey</button>
 
-            {/* Profile dropdown — shows real logged-in user */}
+            {/* Profile dropdown */}
             <div style={{ position: 'relative' }} className="sp-profile-menu">
               <div onClick={() => setShowProfileMenu(o => !o)} style={{ width: 34, height: 34, borderRadius: '50%', background: 'linear-gradient(135deg, #0d9488, #f59e0b)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 14, cursor: 'pointer', flexShrink: 0 }}>
                 {displayInitial}
@@ -367,7 +372,7 @@ export default function Dashboard() {
                     <div style={{ fontSize: 13, fontWeight: 600, color: '#0f172a' }}>{displayName}</div>
                     {displayUsername && <div style={{ fontSize: 11, color: '#64748b', marginTop: 2 }}>@{displayUsername}</div>}
                   </div>
-                  <div onClick={() => { setShowProfileMenu(false); setShowSettings(true) }} style={{ padding: '10px 16px', fontSize: 13, color: '#475569', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }} onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>⚙️ Settings</div>
+                  <div onClick={() => { setShowProfileMenu(false); setActiveNav('Settings') }} style={{ padding: '10px 16px', fontSize: 13, color: '#475569', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }} onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>⚙️ Settings</div>
                   <div onClick={handleLogout} style={{ padding: '10px 16px', fontSize: 13, color: '#dc2626', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }} onMouseEnter={e => e.currentTarget.style.background = '#fef2f2'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>↩ Logout</div>
                 </div>
               )}
@@ -375,127 +380,205 @@ export default function Dashboard() {
           </div>
         </header>
 
-        {/* Content */}
+        {/* Dynamic Page Views */}
         <div style={{ padding: isMobile ? '20px 16px' : '32px', flex: 1 }}>
 
-          {/* Mobile search */}
-          {isMobile && (
-            <div style={{ position: 'relative', marginBottom: 20 }}>
-              <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', fontSize: 13, color: '#94a3b8' }}>🔍</span>
-              <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search surveys..."
-                style={{ width: '100%', paddingLeft: 32, paddingRight: 14, paddingTop: 9, paddingBottom: 9, borderRadius: 9, border: '1.5px solid #e2e8f0', fontSize: 13, outline: 'none', boxSizing: 'border-box', fontFamily: 'Plus Jakarta Sans, sans-serif', background: '#fff' }}
-                onFocus={e => (e.target.style.borderColor = '#0d9488')} onBlur={e => (e.target.style.borderColor = '#e2e8f0')} />
+          {/* PAGE 1: DASHBOARD */}
+          {activeNav === 'Dashboard' && (
+            <div>
+              {isMobile && (
+                <div style={{ position: 'relative', marginBottom: 20 }}>
+                  <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', fontSize: 13, color: '#94a3b8' }}>🔍</span>
+                  <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search surveys..."
+                    style={{ width: '100%', paddingLeft: 32, paddingRight: 14, paddingTop: 9, paddingBottom: 9, borderRadius: 9, border: '1.5px solid #e2e8f0', fontSize: 13, outline: 'none', boxSizing: 'border-box', fontFamily: 'Plus Jakarta Sans, sans-serif', background: '#fff' }}
+                    onFocus={e => (e.target.style.borderColor = '#0d9488')} onBlur={e => (e.target.style.borderColor = '#e2e8f0')} />
+                </div>
+              )}
+
+              <div style={{ marginBottom: 24 }}>
+                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(18px,4vw,22px)', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.5px' }}>
+                  Welcome {displayName} 👋
+                </h2>
+                <p style={{ fontSize: 13, color: '#64748b', marginTop: 4 }}>Here's what's happening with your surveys today.</p>
+              </div>
+
+              <div className="sp-stat-cards" style={{ display: 'flex', gap: 12, marginBottom: 24, flexWrap: 'wrap' }}>
+                <StatCard icon="📋" label="Total surveys" value={totalSurveys} trend="+2" />
+                <StatCard icon="✅" label="Active surveys" value={activeSurveys} color="#16a34a" />
+                <StatCard icon="📬" label="Responses today" value={responsesToday} trend="+12" color="#7c3aed" />
+                <StatCard icon="📈" label="Completion rate" value={`${completionRate}%`} trend="+3.1%" color="#f59e0b" />
+              </div>
+
+              <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0', overflow: 'hidden' }}>
+                <div style={{ padding: '16px', borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 700, color: '#0f172a' }}>Recent Surveys</h3>
+                    <span style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 99, fontSize: 11, fontWeight: 600, color: '#64748b', padding: '2px 7px' }}>{filteredSurveys.length}</span>
+                  </div>
+                  <div style={{ display: 'flex', gap: 2, background: '#f8fafc', padding: 3, borderRadius: 8 }}>
+                    {TABS.map(tab => (
+                      <button key={tab} onClick={() => setActiveTab(tab)} style={{ padding: '5px 10px', borderRadius: 6, fontSize: 12, fontWeight: 500, background: activeTab === tab ? '#fff' : 'transparent', color: activeTab === tab ? '#0f172a' : '#64748b', border: 'none', boxShadow: activeTab === tab ? '0 1px 2px rgba(0,0,0,0.05)' : 'none', cursor: 'pointer' }}>{tab}</button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="sp-table-wrap" style={{ overflowX: 'auto' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: isMobile ? 480 : 'auto' }}>
+                    <thead>
+                      <tr style={{ background: '#f8fafc' }}>
+                        {['Survey Title', 'Status', 'Responses', 'Completion', 'Actions'].map(col => (
+                          <th key={col} style={{ padding: '10px 14px', textAlign: 'left', fontSize: 11, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid #e2e8f0' }}>{col}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredSurveys.length === 0 ? (
+                        <tr><td colSpan={5} style={{ padding: 40, textAlign: 'center', color: '#64748b', fontSize: 13 }}>No surveys found.</td></tr>
+                      ) : filteredSurveys.map((s, i) => {
+                        const sc = STATUS_COLORS[s.status] || STATUS_COLORS.draft
+                        return (
+                          <tr key={s.id} className="sp-row" style={{ borderBottom: i < filteredSurveys.length - 1 ? '1px solid #e2e8f0' : 'none' }}>
+                            <td style={{ padding: '12px 14px', fontWeight: 600, color: '#0f172a', cursor: 'pointer' }} onClick={() => setViewSurvey(s)}>{s.title}</td>
+                            <td style={{ padding: '12px 14px' }}><span style={{ padding: '3px 8px', borderRadius: 99, fontSize: 11, fontWeight: 600, background: sc.bg, color: sc.text, textTransform: 'capitalize' }}>{s.status}</span></td>
+                            <td style={{ padding: '12px 14px', color: '#475569' }}>{s.responses.toLocaleString()}</td>
+                            <td style={{ padding: '12px 14px', width: 140 }}><MiniBar pct={s.completion} color={s.status === 'active' ? '#0d9488' : s.status === 'closed' ? '#64748b' : '#f59e0b'} /></td>
+                            <td style={{ padding: '12px 14px' }}>
+                              <button onClick={() => setEditSurvey(s)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, marginRight: 8 }}>✏️</button>
+                              <button onClick={() => setDeleteSurvey(s)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14 }}>🗑️</button>
+                            </td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           )}
 
-          {/* Welcome — uses real logged-in user name */}
-          <div style={{ marginBottom: 24 }}>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(18px,4vw,22px)', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.5px' }}>
-              Welcome {displayName} 👋
-            </h2>
-            <p style={{ fontSize: 13, color: '#64748b', marginTop: 4 }}>Here's what's happening with your surveys today.</p>
-          </div>
-
-          {/* Stat cards */}
-          <div className="sp-stat-cards" style={{ display: 'flex', gap: 12, marginBottom: 24, flexWrap: 'wrap' }}>
-            <StatCard icon="📋" label="Total surveys"   value={totalSurveys}        trend="+2"    />
-            <StatCard icon="✅" label="Active surveys"  value={activeSurveys}        color="#16a34a" />
-            <StatCard icon="📬" label="Responses today" value={responsesToday}        trend="+12"  color="#7c3aed" />
-            <StatCard icon="📈" label="Completion rate" value={`${completionRate}%`} trend="+3.1%" color="#f59e0b" />
-          </div>
-
-          {/* Survey table */}
-          <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0', overflow: 'hidden' }}>
-            <div style={{ padding: '16px', borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 700, color: '#0f172a' }}>Your Surveys</h3>
-                <span style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 99, fontSize: 11, fontWeight: 600, color: '#64748b', padding: '2px 7px' }}>{filtered.length}</span>
-              </div>
-              <div style={{ display: 'flex', gap: 2, background: '#f8fafc', padding: 3, borderRadius: 8 }}>
-                {TABS.map(tab => (
-                  <button key={tab} onClick={() => setActiveTab(tab)} style={{ padding: '5px 10px', borderRadius: 6, fontSize: 12, fontWeight: 500, background: activeTab === tab ? '#fff' : 'transparent', color: activeTab === tab ? '#0f172a' : '#64748b', border: 'none', boxShadow: activeTab === tab ? '0 1px 2px rgba(0,0,0,0.05)' : 'none', cursor: 'pointer' }}>{tab}</button>
-                ))}
-              </div>
-            </div>
-
-            <div className="sp-table-wrap" style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: isMobile ? 480 : 'auto' }}>
-                <thead>
-                  <tr style={{ background: '#f8fafc' }}>
-                    {['Survey Title', 'Status', 'Responses', 'Completion', 'Actions'].map(col => (
-                      <th key={col} style={{ padding: '10px 14px', textAlign: 'left', fontSize: 11, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid #e2e8f0' }}>{col}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {filtered.length === 0 ? (
-                    <tr><td colSpan={5} style={{ padding: 40, textAlign: 'center', color: '#64748b', fontSize: 13 }}>
-                      {searchQuery ? `No surveys match "${searchQuery}".` : <span>No surveys yet. <span onClick={() => setShowNewModal(true)} style={{ color: '#0d9488', cursor: 'pointer', fontWeight: 600 }}>Create one →</span></span>}
-                    </td></tr>
-                  ) : filtered.map((s, i) => {
-                    const sc = STATUS_COLORS[s.status] || STATUS_COLORS.draft
-                    return (
-                      <tr key={s.id} className="sp-row" style={{ borderBottom: i < filtered.length - 1 ? '1px solid #e2e8f0' : 'none', transition: 'background 0.15s', animationDelay: `${i * 35}ms` }}
-                        onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'}
-                        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                      >
-                        <td style={{ padding: '12px 14px' }}>
-                          <span onClick={() => setViewSurvey(s)} style={{ fontWeight: 500, fontSize: 13, color: '#0f172a', cursor: 'pointer' }}
-                            onMouseEnter={e => (e.currentTarget.style.color = '#0d9488')} onMouseLeave={e => (e.currentTarget.style.color = '#0f172a')}>{s.title}</span>
-                        </td>
-                        <td style={{ padding: '12px 14px' }}>
-                          <span style={{ padding: '3px 8px', borderRadius: 99, fontSize: 11, fontWeight: 600, background: sc.bg, color: sc.text, textTransform: 'capitalize' }}>{s.status}</span>
-                        </td>
-                        <td style={{ padding: '12px 14px', fontSize: 13, color: '#475569' }}>{s.responses.toLocaleString()}</td>
-                        <td style={{ padding: '12px 14px' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <MiniBar pct={s.completion} color={s.status === 'active' ? '#0d9488' : s.status === 'closed' ? '#64748b' : '#f59e0b'} />
-                            <span style={{ fontSize: 12, color: '#64748b', minWidth: 30 }}>{s.completion}%</span>
-                          </div>
-                        </td>
-                        <td style={{ padding: '12px 14px' }}>
-                          <div style={{ display: 'flex', gap: 4 }}>
-                            {[
-                              { label: 'View', action: () => setViewSurvey(s),   danger: false },
-                              { label: 'Edit', action: () => setEditSurvey(s),   danger: false },
-                              { label: 'Del',  action: () => setDeleteSurvey(s), danger: true  },
-                            ].map(({ label, action, danger }) => (
-                              <button key={label} onClick={action} style={{ padding: '4px 9px', borderRadius: 6, fontSize: 11, fontWeight: 500, background: '#f8fafc', color: danger ? '#dc2626' : '#475569', border: danger ? '1px solid #fecaca' : '1px solid #e2e8f0', cursor: 'pointer' }}
-                                onMouseEnter={e => { e.currentTarget.style.borderColor = danger ? '#dc2626' : '#0d9488'; e.currentTarget.style.background = danger ? '#fef2f2' : '#f0fdfa' }}
-                                onMouseLeave={e => { e.currentTarget.style.borderColor = danger ? '#fecaca' : '#e2e8f0'; e.currentTarget.style.background = '#f8fafc' }}
-                              >{label}</button>
-                            ))}
-                          </div>
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* Audit Logs */}
-          <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0', padding: '20px 16px', marginTop: 20 }}>
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 16 }}>Audit Logs</h3>
-            {activity.map((a, i) => (
-              <div key={a.id} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, paddingBottom: 12, marginBottom: i < activity.length - 1 ? 12 : 0, borderBottom: i < activity.length - 1 ? '1px solid #e2e8f0' : 'none', animation: 'fadeUp 0.25s ease both', animationDelay: `${i * 40}ms` }}>
-                <span style={{ fontSize: 16, width: 32, height: 32, borderRadius: 8, background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{a.icon}</span>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 13, color: '#0f172a', lineHeight: 1.4 }}>{a.text}</div>
-                  <div style={{ fontSize: 11, color: '#64748b', marginTop: 2 }}>{a.time}</div>
+          {/* PAGE 2: MY SURVEYS */}
+          {activeNav === 'My Surveys' && (
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 800, color: '#0f172a' }}>All Surveys</h2>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  {TABS.map(tab => (
+                    <button key={tab} onClick={() => setActiveTab(tab)} style={{ padding: '6px 12px', borderRadius: 8, fontSize: 13, fontWeight: 600, border: '1px solid #e2e8f0', background: activeTab === tab ? '#0d9488' : '#fff', color: activeTab === tab ? '#fff' : '#64748b', cursor: 'pointer' }}>{tab}</button>
+                  ))}
                 </div>
               </div>
-            ))}
-          </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
+                {filteredSurveys.map(s => {
+                  const sc = STATUS_COLORS[s.status] || STATUS_COLORS.draft
+                  return (
+                    <div key={s.id} style={{ background: '#fff', borderRadius: 16, padding: 20, border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
+                          <span style={{ padding: '3px 8px', borderRadius: 99, fontSize: 11, fontWeight: 600, background: sc.bg, color: sc.text, textTransform: 'capitalize' }}>{s.status}</span>
+                          <div>
+                            <button onClick={() => setEditSurvey(s)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, marginRight: 4 }}>✏️</button>
+                            <button onClick={() => setDeleteSurvey(s)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14 }}>🗑️</button>
+                          </div>
+                        </div>
+                        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 700, color: '#0f172a', marginBottom: 12 }}>{s.title}</h3>
+                      </div>
+                      <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#64748b', marginBottom: 6 }}>
+                          <span>Responses: <strong>{s.responses}</strong></span>
+                          <span><strong>{s.completion}%</strong> Rate</span>
+                        </div>
+                        <MiniBar pct={s.completion} color={s.status === 'active' ? '#0d9488' : '#64748b'} />
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* PAGE 3: ANALYTICS */}
+          {activeNav === 'Analytics' && (
+            <div>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 800, color: '#0f172a', marginBottom: 20 }}>Survey Analytics</h2>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
+                <div style={{ background: '#fff', padding: 24, borderRadius: 16, border: '1px solid #e2e8f0' }}>
+                  <h3 style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 16 }}>Response Overview</h3>
+                  <div style={{ fontSize: 36, fontWeight: 800, color: '#0d9488', fontFamily: 'var(--font-display)' }}>695</div>
+                  <p style={{ fontSize: 13, color: '#64748b', marginTop: 4 }}>Total aggregated responses across active surveys.</p>
+                </div>
+                <div style={{ background: '#fff', padding: 24, borderRadius: 16, border: '1px solid #e2e8f0' }}>
+                  <h3 style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 16 }}>Average Completion</h3>
+                  <div style={{ fontSize: 36, fontWeight: 800, color: '#f59e0b', fontFamily: 'var(--font-display)' }}>{completionRate}%</div>
+                  <p style={{ fontSize: 13, color: '#64748b', marginTop: 4 }}>Across all ongoing campaign streams.</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* PAGE 4: RESPONDENTS */}
+          {activeNav === 'Respondents' && (
+            <div>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 800, color: '#0f172a', marginBottom: 20 }}>Recent Respondents</h2>
+              <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0', overflow: 'hidden' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                  <thead>
+                    <tr style={{ background: '#f8fafc' }}>
+                      <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: '#64748b' }}>Name</th>
+                      <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: '#64748b' }}>Email</th>
+                      <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: '#64748b' }}>Survey Title</th>
+                      <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: '#64748b' }}>Status</th>
+                      <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: '#64748b' }}>Submitted</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {MOCK_RESPONDENTS.map((r, i) => (
+                      <tr key={r.id} style={{ borderBottom: i < MOCK_RESPONDENTS.length - 1 ? '1px solid #e2e8f0' : 'none' }}>
+                        <td style={{ padding: '14px 16px', fontWeight: 600, color: '#0f172a', fontSize: 13 }}>{r.name}</td>
+                        <td style={{ padding: '14px 16px', color: '#64748b', fontSize: 13 }}>{r.email}</td>
+                        <td style={{ padding: '14px 16px', color: '#475569', fontSize: 13 }}>{r.survey}</td>
+                        <td style={{ padding: '14px 16px' }}>
+                          <span style={{ padding: '2px 8px', borderRadius: 99, fontSize: 11, fontWeight: 600, background: r.status === 'Completed' ? '#dcfce7' : '#fef9c3', color: r.status === 'Completed' ? '#16a34a' : '#a16207' }}>
+                            {r.status}
+                          </span>
+                        </td>
+                        <td style={{ padding: '14px 16px', color: '#94a3b8', fontSize: 12 }}>{r.date}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* PAGE 5: SETTINGS */}
+          {activeNav === 'Settings' && (
+            <div style={{ maxWidth: 540 }}>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 800, color: '#0f172a', marginBottom: 20 }}>Account Settings</h2>
+              <form onSubmit={handleSaveSettings} style={{ background: '#fff', padding: 24, borderRadius: 16, border: '1px solid #e2e8f0' }}>
+                <div style={{ marginBottom: 16 }}>
+                  <label style={{ fontSize: 13, fontWeight: 600, color: '#475569', display: 'block', marginBottom: 6 }}>Full Name</label>
+                  <input value={settingsForm.fullName} onChange={e => setSettingsForm({ ...settingsForm, fullName: e.target.value })}
+                    style={{ width: '100%', padding: '10px 14px', borderRadius: 10, fontSize: 14, border: '1.5px solid #e2e8f0', outline: 'none', boxSizing: 'border-box' }} />
+                </div>
+                <div style={{ marginBottom: 20 }}>
+                  <label style={{ fontSize: 13, fontWeight: 600, color: '#475569', display: 'block', marginBottom: 6 }}>Username</label>
+                  <input value={settingsForm.username} onChange={e => setSettingsForm({ ...settingsForm, username: e.target.value })}
+                    style={{ width: '100%', padding: '10px 14px', borderRadius: 10, fontSize: 14, border: '1.5px solid #e2e8f0', outline: 'none', boxSizing: 'border-box' }} />
+                </div>
+                <button type="submit" className="sp-btn-primary" style={{ width: '100%', padding: 12 }}>Save Profile</button>
+              </form>
+            </div>
+          )}
+
         </div>
       </main>
 
+      {/* Modals & Toasts */}
       {showNewModal && <SurveyModal mode="new" onClose={() => setShowNewModal(false)} onSave={handleCreateSurvey} />}
-      {editSurvey   && <SurveyModal mode="edit" survey={editSurvey} onClose={() => setEditSurvey(null)} onSave={handleEditSurvey} />}
-      {viewSurvey   && <SurveyDetailModal survey={viewSurvey} onClose={() => setViewSurvey(null)} onEdit={() => { setEditSurvey(viewSurvey); setViewSurvey(null) }} onDelete={() => { setDeleteSurvey(viewSurvey); setViewSurvey(null) }} />}
+      {editSurvey && <SurveyModal mode="edit" survey={editSurvey} onClose={() => setEditSurvey(null)} onSave={handleEditSurvey} />}
       {deleteSurvey && <DeleteModal survey={deleteSurvey} onClose={() => setDeleteSurvey(null)} onConfirm={handleDeleteSurvey} />}
-      {showSettings && <SettingsModal user={user} onClose={() => setShowSettings(false)} onSave={handleSaveSettings} />}
+      {viewSurvey && <SurveyDetailModal survey={viewSurvey} onClose={() => setViewSurvey(null)} onEdit={() => { setEditSurvey(viewSurvey); setViewSurvey(null) }} onDelete={() => { setDeleteSurvey(viewSurvey); setViewSurvey(null) }} />}
       {toast && <Toast message={toast.message} type={toast.type} onDone={() => setToast(null)} />}
     </div>
   )
