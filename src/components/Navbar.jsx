@@ -26,7 +26,7 @@ export default function Navbar({ dark = false }) {
 
   const isActive = (path) => location.pathname === path;
 
-  const navLinks = user
+  const navLinks = user && location.pathname === '/dashboard'
     ? [
         { to: "/", label: "Home" },
         { to: "/about", label: "About" },
@@ -94,7 +94,7 @@ export default function Navbar({ dark = false }) {
             color: dark ? "#fff" : "var(--ink)",
           }}
         >
-          SurveyPulse
+          SurveyMatrix
         </span>
       </Link>
 
@@ -107,97 +107,41 @@ export default function Navbar({ dark = false }) {
             gap: 4,
           }}
         >
-          {navLinks.map(({ to, label }) => (
-            <Link
-              key={to}
-              to={to}
-              style={{
-                textDecoration: "none",
-                padding: "6px 14px",
-                borderRadius: 8,
-                fontSize: 14,
-                fontWeight: 500,
-                color: isActive(to)
-                  ? "var(--teal)"
-                  : dark
-                  ? "rgba(255,255,255,0.75)"
-                  : "var(--muted)",
-                background: isActive(to)
-                  ? dark
-                    ? "rgba(13,148,136,.15)"
-                    : "rgba(13,148,136,.08)"
-                  : "transparent",
-              }}
-            >
-              {label}
-            </Link>
-          ))}
+         {navLinks.map(({ to, label }) => (
+  <Link
+    key={to}
+    to={to}
+    onClick={() => {
+      if (user && to !== '/dashboard') logout()
+    }}
+    style={{
+      textDecoration: "none",
+      padding: "6px 14px",
+      borderRadius: 8,
+      fontSize: 14,
+      fontWeight: 500,
+      color: isActive(to) ? "var(--teal)" : dark ? "rgba(255,255,255,0.75)" : "var(--muted)",
+      background: isActive(to) ? dark ? "rgba(13,148,136,.15)" : "rgba(13,148,136,.08)" : "transparent",
+    }}
+  >{label}</Link>
+))}
 
-          {user ? (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                marginLeft: 10,
-              }}
-            >
-              <span
-                style={{
-                  fontSize: 13,
-                  color: dark
-                    ? "rgba(255,255,255,.6)"
-                    : "var(--muted)",
-                }}
-              >
-                {user.username}
-              </span>
-
-              <button
-                onClick={logout}
-                style={{
-                  padding: "7px 18px",
-                  borderRadius: 8,
-                  cursor: "pointer",
-                  background: "transparent",
-                  border: `1px solid ${
-                    dark
-                      ? "rgba(255,255,255,.2)"
-                      : "var(--border)"
-                  }`,
-                  color: dark ? "#fff" : "var(--ink)",
-                }}
-              >
-                Log out
-              </button>
-            </div>
-          ) : (
-            <div
-              style={{
-                display: "flex",
-                gap: 8,
-                marginLeft: 10,
-              }}
-            >
-              <Link
-                to="/login"
-                style={{
-                  textDecoration: "none",
-                  padding: "7px 18px",
-                  borderRadius: 8,
-                  background: "transparent",
-                  border: `1px solid ${
-                    dark
-                      ? "rgba(255,255,255,.2)"
-                      : "var(--border)"
-                  }`,
-                  color: dark ? "#fff" : "var(--ink)",
-                }}
-              >
-                Log in
-              </Link>
-            </div>
-          )}
+         {user && location.pathname === '/dashboard' ? (
+  <div style={{ display: "flex", alignItems: "center", gap: 12, marginLeft: 10 }}>
+    <span style={{ fontSize: 13, color: dark ? "rgba(255,255,255,.6)" : "var(--muted)" }}>
+      {user.username}
+    </span>
+    <button onClick={logout} style={{ padding: "7px 18px", borderRadius: 8, cursor: "pointer", background: "transparent", border: `1px solid ${dark ? "rgba(255,255,255,.2)" : "var(--border)"}`, color: dark ? "#fff" : "var(--ink)" }}>
+      Log out
+    </button>
+  </div>
+) : (
+  <div style={{ display: "flex", gap: 8, marginLeft: 10 }}>
+    <Link to="/login" style={{ textDecoration: "none", padding: "7px 18px", borderRadius: 8, background: "transparent", border: `1px solid ${dark ? "rgba(255,255,255,.2)" : "var(--border)"}`, color: dark ? "#fff" : "var(--ink)" }}>
+      Log in
+    </Link>
+  </div>
+)}
         </div>
       )}
 
@@ -272,80 +216,41 @@ export default function Navbar({ dark = false }) {
           {/* Main Navigation Links Wrapper */}
           <div style={{ display: "flex", flexDirection: "column", gap: 14, flexGrow: 1 }}>
             {navLinks.map(({ to, label }) => (
-              <Link
-                key={to}
-                to={to}
-                onClick={() => setMenuOpen(false)}
-                style={{
-                  textDecoration: "none",
-                  color: dark ? "#fff" : "#111",
-                  fontSize: 18,
-                  fontWeight: 600,
-                  padding: "6px 0",
-                  borderBottom: `1px solid ${dark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"}`,
-                }}
-              >
-                {label}
-              </Link>
-            ))}
+  <Link
+    key={to}
+    to={to}
+    onClick={() => {
+      if (user && to !== '/dashboard') logout()
+      setMenuOpen(false)
+    }}
+    style={{
+      textDecoration: "none",
+      color: dark ? "#fff" : "#111",
+      fontSize: 18,
+      fontWeight: 600,
+      padding: "6px 0",
+      borderBottom: `1px solid ${dark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"}`,
+    }}
+  >{label}</Link>
+))}
           </div>
 
           {/* Action Footer Wrapper (Pulled up and fits clean) */}
           <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 10 }}>
-            {user ? (
-              <>
-                <span
-                  style={{
-                    color: dark ? "rgba(255,255,255,.6)" : "var(--muted)",
-                    textAlign: "center",
-                    fontSize: 14,
-                    marginBottom: 2,
-                  }}
-                >
-                  Logged in as <strong>{user.username}</strong>
-                </span>
-
-                <button
-                  onClick={() => {
-                    logout();
-                    setMenuOpen(false);
-                  }}
-                  style={{
-                    width: "100%",
-                    padding: "12px",
-                    borderRadius: 10,
-                    border: `1px solid ${dark ? "rgba(255,255,255,.2)" : "#ccc"}`,
-                    background: "transparent",
-                    cursor: "pointer",
-                    fontSize: 16,
-                    fontWeight: 600,
-                    color: dark ? "#fff" : "#111",
-                  }}
-                >
-                  Log out
-                </button>
-              </>
-            ) : (
-              <Link
-                to="/login"
-                onClick={() => setMenuOpen(false)}
-                style={{
-                  textDecoration: "none",
-                  textAlign: "center",
-                  width: "100%",
-                  padding: "12px",
-                  borderRadius: 10,
-                  boxSizing: "border-box",
-                  background: "linear-gradient(135deg,#0d9488,#f59e0b)",
-                  color: "#fff",
-                  fontSize: 16,
-                  fontWeight: 600,
-                  boxShadow: "0 4px 12px rgba(13, 148, 136, 0.2)",
-                }}
-              >
-                Log in
-              </Link>
-            )}
+           {user && location.pathname === '/dashboard' ? (
+  <>
+    <span style={{ color: dark ? "rgba(255,255,255,.6)" : "var(--muted)", textAlign: "center", fontSize: 14, marginBottom: 2 }}>
+      Logged in as <strong>{user.username}</strong>
+    </span>
+    <button onClick={() => { logout(); setMenuOpen(false); }} style={{ width: "100%", padding: "12px", borderRadius: 10, border: `1px solid ${dark ? "rgba(255,255,255,.2)" : "#ccc"}`, background: "transparent", cursor: "pointer", fontSize: 16, fontWeight: 600, color: dark ? "#fff" : "#111" }}>
+      Log out
+    </button>
+  </>
+) : (
+  <Link to="/login" onClick={() => setMenuOpen(false)} style={{ textDecoration: "none", textAlign: "center", width: "100%", padding: "12px", borderRadius: 10, boxSizing: "border-box", background: "linear-gradient(135deg,#0d9488,#f59e0b)", color: "#fff", fontSize: 16, fontWeight: 600 }}>
+    Log in
+  </Link>
+)}
           </div>
         </div>
       )}

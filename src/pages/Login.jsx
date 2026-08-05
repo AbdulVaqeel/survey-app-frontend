@@ -116,7 +116,7 @@ export default function Login() {
               Understand every step of your customer's journey.
             </h2>
             <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 16, lineHeight: 1.6, fontWeight: 400 }}>
-              Analyze feedback metrics, map interactions, and build high-impact experience funnels with SurveyPulse.
+              Analyze feedback metrics, map interactions, and build high-impact experience funnels with SurveyMatrix.
             </p>
           </div>
         </div>
@@ -135,7 +135,7 @@ export default function Login() {
               <span style={{
                 fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 18,
                 color: '#0f172a', letterSpacing: '-0.3px',
-              }}>SurveyPulse</span>
+              }}>SurveyMatrix</span>
             </Link>
 
             <div style={{ marginBottom: 8 }}>
@@ -169,7 +169,7 @@ export default function Login() {
                   type="text"
                   value={username}
                   onChange={e => setUsername(e.target.value)}
-                  placeholder="vaqeel@vs.sa"
+                  placeholder="email"
                   autoComplete="username"
                   style={{
                     width: '100%', padding: '11px 14px', borderRadius: 9,
@@ -211,7 +211,7 @@ export default function Login() {
                     background: 'none', border: 'none', padding: 0,
                     color: '#64748b', fontSize: 16, cursor: 'pointer',
                   }}>
-                    {showPass ? '🙈' : '👁'}
+                    {showPass ? '👁️‍🗨' : '👁'}
                   </button>
                 </div>
               </div>

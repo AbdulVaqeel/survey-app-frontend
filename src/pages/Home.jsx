@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar'
+import Footer from './Footer'
 
 const FEATURES = [
   { icon: '📊', title: 'Real-time Analytics', desc: 'Watch responses pour in live. Instantly visualize trends, track completion rates, and surface insights the moment data arrives.' },
@@ -18,9 +19,9 @@ const STATS = [
 ]
 
 const TEAM = [
-  { name: 'Abdul', role: 'Founder & Head of SurveyPulse', image: '/IT_1.jpg', accent: '#0d9488' },
-  { name: 'Sara',  role: 'Senior Director of SurveyPulse', image: '/IT_2.jpg', accent: '#7c3aed' },
-  { name: 'Rafiq', role: 'Research Lead of SurveyPulse',   image: '/IT_3.jpg', accent: '#d97706' },
+  { name: 'Abdul', role: 'Founder & Head of SurveyMatrix', image: '/IT_1.jpg', accent: '#0d9488' },
+  { name: 'Sara',  role: 'Senior Director of SurveyMatrix', image: '/IT_2.jpg', accent: '#7c3aed' },
+  { name: 'Rafiq', role: 'Research Lead of SurveyMatrix',   image: '/IT_3.jpg', accent: '#d97706' },
 ]
 
 export default function Home() {
@@ -186,7 +187,7 @@ export default function Home() {
             <span className="sp-section-tag">Our People</span>
             <h2 className="sp-h2">Loved by research teams across the region</h2>
             <div className="sp-divider" />
-            <p className="sp-section-desc">Meet the people driving SurveyPulse forward across the GCC.</p>
+            <p className="sp-section-desc">Meet the people driving SurveyMatrix forward across the GCC.</p>
           </div>
           <div className="sp-team-grid">
             {TEAM.map((m) => (
@@ -210,15 +211,11 @@ export default function Home() {
         <section className="sp-cta">
           <span className="sp-section-tag">Get started</span>
           <h2 className="sp-h2 sp-h2-light" style={{ color: '#FAFAF8' }}>Ready to start listening?</h2>
-          <p className="sp-cta-sub">Join thousands of teams making better decisions with SurveyPulse.</p>
+          <p className="sp-cta-sub">Join thousands of teams making better decisions with SurveyMatrix.</p>
           <Link to="/login" className="sp-btn-amber">Get started — Explore Now!</Link>
         </section>
 
-        {/* FOOTER */}
-        <footer className="sp-footer">
-          <span className="sp-footer-logo">SurveyPulse</span>
-          <span className="sp-footer-copy">© 2026 SurveyPulse. All rights reserved.</span>
-        </footer>
+        <Footer />
       </div>
     </>
   )

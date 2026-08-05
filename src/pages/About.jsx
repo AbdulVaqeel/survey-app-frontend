@@ -1,5 +1,6 @@
 import Navbar from '../components/Navbar'
 import { Link } from 'react-router-dom'
+import Footer from './Footer'
 
 const TEAM = [
   { name: 'Athiq',  role: 'Chief Scientific Officer (CSO)', avatar: 'A' },
@@ -94,7 +95,7 @@ export default function About() {
             fontSize: 16, color: 'var(--muted)', maxWidth: 560, margin: '0 auto',
             lineHeight: 1.75, fontWeight: 300,
           }}>
-            SurveyPulse was founded in Riyadh in 2021 by a team of researchers and engineers
+            SurveyMatrix was founded in Riyadh in 2021 by a team of researchers and engineers
             frustrated by clunky survey tools that failed to match the pace of modern business.
             We set out to build something better.
           </p>
@@ -171,13 +172,14 @@ export default function About() {
           <h2 style={{
             fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 4vw, 32px)', fontWeight: 800,
             letterSpacing: '-0.8px', marginBottom: 16, color: 'var(--ink)',
-          }}>Join the SurveyPulse community</h2>
+          }}>Join the SurveyMatrix community</h2>
           <p style={{ color: 'var(--muted)', marginBottom: 32, fontWeight: 400 }}>
             Start collecting insights that actually move the needle.
           </p>
           <Link to="/login" className="sp-about-btn">Explore Now! →</Link>
         </section>
       </div>
+      <Footer />
     </div>
   )
 }

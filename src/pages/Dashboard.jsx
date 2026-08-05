@@ -215,6 +215,13 @@ export default function Dashboard() {
     return () => window.removeEventListener('resize', onResize)
   }, [])
 
+  // Log out when user navigates away from dashboard
+// useEffect(() => {
+//   return () => {
+//     logout()
+//   }
+// }, [])
+
   useEffect(() => {
     const handleClickOutside = e => {
       if (!e.target.closest('.sp-profile-menu')) setShowProfileMenu(false)
@@ -308,7 +315,7 @@ export default function Dashboard() {
       <aside className="sp-sidebar" style={{ width: sidebarOpen ? 240 : (isMobile ? 0 : 64), background: '#0f172a', display: 'flex', flexDirection: 'column', transition: 'width 0.25s ease', overflow: 'hidden', flexShrink: 0 }}>
         <div style={{ padding: sidebarOpen ? '24px 20px' : '24px 16px', borderBottom: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{ width: 32, height: 32, borderRadius: 8, flexShrink: 0, background: 'linear-gradient(135deg, #0d9488, #f59e0b)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-display)', fontWeight: 800, color: '#fff', fontSize: 16 }}>S</div>
-          {sidebarOpen && <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 16, color: '#fff', whiteSpace: 'nowrap' }}>SurveyPulse</span>}
+          {sidebarOpen && <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 16, color: '#fff', whiteSpace: 'nowrap' }}>SurveyMatrix</span>}
         </div>
 
         <nav style={{ flex: 1, padding: '16px 0' }}>
