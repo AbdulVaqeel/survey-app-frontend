@@ -43,15 +43,7 @@ const NAV_ITEMS = [
 function StatCard({ icon, label, value, trend, color = '#0d9488' }) {
   return (
     <div
-      style={{
-        background: '#fff',
-        borderRadius: 16,
-        padding: '20px 18px',
-        border: '1px solid #e2e8f0',
-        flex: '1 1 160px',
-        minWidth: 0,
-        transition: 'box-shadow 0.2s',
-      }}
+      style={{ background: '#fff', borderRadius: 16, padding: '20px 18px', border: '1px solid #e2e8f0', flex: '1 1 160px', minWidth: 0, transition: 'box-shadow 0.2s' }}
       onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.08)')}
       onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}
     >
@@ -75,12 +67,10 @@ function SurveyModal({ mode, survey, onClose, onSave }) {
   const [title, setTitle] = useState(survey?.title || '')
   const [status, setStatus] = useState(survey?.status || 'draft')
   const [error, setError] = useState('')
-
   const handleSubmit = () => {
     if (!title.trim()) { setError('Survey title is required.'); return }
     onSave({ title: title.trim(), status })
   }
-
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, backdropFilter: 'blur(2px)', padding: '16px' }} onClick={onClose}>
       <div style={{ background: '#fff', borderRadius: 20, padding: 'clamp(20px,5vw,32px)', width: '100%', maxWidth: 440, boxShadow: '0 20px 60px rgba(0,0,0,0.2)', animation: 'modalIn 0.2s ease' }} onClick={e => e.stopPropagation()}>
@@ -185,22 +175,12 @@ export default function Dashboard() {
   const [deleteSurvey, setDeleteSurvey] = useState(null)
   const [toast, setToast] = useState(null)
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
-
-  // Settings State
-  const [settingsForm, setSettingsForm] = useState({
-    fullName: user.full_name || '',
-    username: user.username || '',
-    emailNotifications: true,
-  })
+  const [settingsForm, setSettingsForm] = useState({ fullName: user.full_name || '', username: user.username || '' })
 
   useEffect(() => {
     if (authUser) {
       setUser(authUser)
-      setSettingsForm(prev => ({
-        ...prev,
-        fullName: authUser.full_name || '',
-        username: authUser.username || ''
-      }))
+      setSettingsForm({ fullName: authUser.full_name || '', username: authUser.username || '' })
     }
   }, [authUser])
 
@@ -215,19 +195,10 @@ export default function Dashboard() {
     return () => window.removeEventListener('resize', onResize)
   }, [])
 
-  // Log out when user navigates away from dashboard
-// useEffect(() => {
-//   return () => {
-//     logout()
-//   }
-// }, [])
-
   useEffect(() => {
     const handleClickOutside = e => {
       if (!e.target.closest('.sp-profile-menu')) setShowProfileMenu(false)
-      if (isMobile && !e.target.closest('.sp-sidebar') && !e.target.closest('.sp-menu-btn')) {
-        setSidebarOpen(false)
-      }
+      if (isMobile && !e.target.closest('.sp-sidebar') && !e.target.closest('.sp-menu-btn')) setSidebarOpen(false)
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
@@ -302,7 +273,6 @@ export default function Dashboard() {
           .sp-sidebar { position: fixed !important; top: 0; left: 0; height: 100vh; z-index: 40; }
           .sp-sidebar-overlay.active { display: block; }
           .sp-stat-cards { flex-wrap: wrap; }
-          .sp-table-wrap { font-size: 12px; }
           .sp-table-wrap th, .sp-table-wrap td { padding: 10px 12px !important; }
         }
       `}</style>
@@ -333,7 +303,6 @@ export default function Dashboard() {
           })}
         </nav>
 
-        {/* Sidebar user strip */}
         <div style={{ padding: sidebarOpen ? '16px 20px' : '16px', borderTop: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{ width: 32, height: 32, borderRadius: '50%', flexShrink: 0, background: 'linear-gradient(135deg, #0d9488, #f59e0b)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 14 }}>{displayInitial}</div>
           {sidebarOpen && (
@@ -348,7 +317,7 @@ export default function Dashboard() {
         </div>
       </aside>
 
-      {/* Main Container */}
+      {/* Main */}
       <main style={{ flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column', minWidth: 0 }}>
 
         {/* Topbar */}
@@ -367,8 +336,6 @@ export default function Dashboard() {
               </div>
             )}
             <button className="sp-btn-primary" onClick={() => setShowNewModal(true)}>+ {isMobile ? '' : 'New '}Survey</button>
-
-            {/* Profile dropdown */}
             <div style={{ position: 'relative' }} className="sp-profile-menu">
               <div onClick={() => setShowProfileMenu(o => !o)} style={{ width: 34, height: 34, borderRadius: '50%', background: 'linear-gradient(135deg, #0d9488, #f59e0b)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 14, cursor: 'pointer', flexShrink: 0 }}>
                 {displayInitial}
@@ -387,10 +354,10 @@ export default function Dashboard() {
           </div>
         </header>
 
-        {/* Dynamic Page Views */}
-        <div style={{ padding: isMobile ? '20px 16px' : '32px', flex: 1 }}>
+        {/* Page content */}
+        <div style={{ padding: isMobile ? '20px 16px' : '32px', flex: 1, overflow: 'auto' }}>
 
-          {/* PAGE 1: DASHBOARD */}
+          {/* DASHBOARD */}
           {activeNav === 'Dashboard' && (
             <div>
               {isMobile && (
@@ -401,21 +368,16 @@ export default function Dashboard() {
                     onFocus={e => (e.target.style.borderColor = '#0d9488')} onBlur={e => (e.target.style.borderColor = '#e2e8f0')} />
                 </div>
               )}
-
               <div style={{ marginBottom: 24 }}>
-                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(18px,4vw,22px)', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.5px' }}>
-                  Welcome {displayName} 👋
-                </h2>
+                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(18px,4vw,22px)', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.5px' }}>Welcome {displayName} 👋</h2>
                 <p style={{ fontSize: 13, color: '#64748b', marginTop: 4 }}>Here's what's happening with your surveys today.</p>
               </div>
-
               <div className="sp-stat-cards" style={{ display: 'flex', gap: 12, marginBottom: 24, flexWrap: 'wrap' }}>
                 <StatCard icon="📋" label="Total surveys" value={totalSurveys} trend="+2" />
                 <StatCard icon="✅" label="Active surveys" value={activeSurveys} color="#16a34a" />
                 <StatCard icon="📬" label="Responses today" value={responsesToday} trend="+12" color="#7c3aed" />
                 <StatCard icon="📈" label="Completion rate" value={`${completionRate}%`} trend="+3.1%" color="#f59e0b" />
               </div>
-
               <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0', overflow: 'hidden' }}>
                 <div style={{ padding: '16px', borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -428,7 +390,6 @@ export default function Dashboard() {
                     ))}
                   </div>
                 </div>
-
                 <div className="sp-table-wrap" style={{ overflowX: 'auto' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: isMobile ? 480 : 'auto' }}>
                     <thead>
@@ -463,19 +424,18 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* PAGE 2: MY SURVEYS */}
+          {/* MY SURVEYS */}
           {activeNav === 'My Surveys' && (
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
                 <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 800, color: '#0f172a' }}>All Surveys</h2>
-                <div style={{ display: 'flex', gap: 8 }}>
+                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                   {TABS.map(tab => (
                     <button key={tab} onClick={() => setActiveTab(tab)} style={{ padding: '6px 12px', borderRadius: 8, fontSize: 13, fontWeight: 600, border: '1px solid #e2e8f0', background: activeTab === tab ? '#0d9488' : '#fff', color: activeTab === tab ? '#fff' : '#64748b', cursor: 'pointer' }}>{tab}</button>
                   ))}
                 </div>
               </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 16 }}>
                 {filteredSurveys.map(s => {
                   const sc = STATUS_COLORS[s.status] || STATUS_COLORS.draft
                   return (
@@ -488,7 +448,7 @@ export default function Dashboard() {
                             <button onClick={() => setDeleteSurvey(s)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14 }}>🗑️</button>
                           </div>
                         </div>
-                        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 700, color: '#0f172a', marginBottom: 12 }}>{s.title}</h3>
+                        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 12 }}>{s.title}</h3>
                       </div>
                       <div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#64748b', marginBottom: 6 }}>
@@ -504,11 +464,11 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* PAGE 3: ANALYTICS */}
+          {/* ANALYTICS */}
           {activeNav === 'Analytics' && (
             <div>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 800, color: '#0f172a', marginBottom: 20 }}>Survey Analytics</h2>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 20 }}>
                 <div style={{ background: '#fff', padding: 24, borderRadius: 16, border: '1px solid #e2e8f0' }}>
                   <h3 style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 16 }}>Response Overview</h3>
                   <div style={{ fontSize: 36, fontWeight: 800, color: '#0d9488', fontFamily: 'var(--font-display)' }}>695</div>
@@ -523,42 +483,70 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* PAGE 4: RESPONDENTS */}
+          {/* RESPONDENTS — fixed mobile responsiveness */}
           {activeNav === 'Respondents' && (
             <div>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 800, color: '#0f172a', marginBottom: 20 }}>Recent Respondents</h2>
-              <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0', overflow: 'hidden' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                  <thead>
-                    <tr style={{ background: '#f8fafc' }}>
-                      <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: '#64748b' }}>Name</th>
-                      <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: '#64748b' }}>Email</th>
-                      <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: '#64748b' }}>Survey Title</th>
-                      <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: '#64748b' }}>Status</th>
-                      <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: '#64748b' }}>Submitted</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {MOCK_RESPONDENTS.map((r, i) => (
-                      <tr key={r.id} style={{ borderBottom: i < MOCK_RESPONDENTS.length - 1 ? '1px solid #e2e8f0' : 'none' }}>
-                        <td style={{ padding: '14px 16px', fontWeight: 600, color: '#0f172a', fontSize: 13 }}>{r.name}</td>
-                        <td style={{ padding: '14px 16px', color: '#64748b', fontSize: 13 }}>{r.email}</td>
-                        <td style={{ padding: '14px 16px', color: '#475569', fontSize: 13 }}>{r.survey}</td>
-                        <td style={{ padding: '14px 16px' }}>
-                          <span style={{ padding: '2px 8px', borderRadius: 99, fontSize: 11, fontWeight: 600, background: r.status === 'Completed' ? '#dcfce7' : '#fef9c3', color: r.status === 'Completed' ? '#16a34a' : '#a16207' }}>
-                            {r.status}
-                          </span>
-                        </td>
-                        <td style={{ padding: '14px 16px', color: '#94a3b8', fontSize: 12 }}>{r.date}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+
+              {/* Mobile: card layout */}
+              {isMobile ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  {MOCK_RESPONDENTS.map(r => (
+                    <div key={r.id} style={{ background: '#fff', borderRadius: 14, padding: '16px', border: '1px solid #e2e8f0' }}>
+                      {/* Name + status row */}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                        <div style={{ fontWeight: 700, fontSize: 14, color: '#0f172a' }}>{r.name}</div>
+                        <span style={{ padding: '3px 8px', borderRadius: 99, fontSize: 11, fontWeight: 600, background: r.status === 'Completed' ? '#dcfce7' : '#fef9c3', color: r.status === 'Completed' ? '#16a34a' : '#a16207', whiteSpace: 'nowrap' }}>
+                          {r.status}
+                        </span>
+                      </div>
+                      {/* Email */}
+                      <div style={{ fontSize: 12, color: '#64748b', marginBottom: 6 }}>📧 {r.email}</div>
+                      {/* Survey */}
+                      <div style={{ fontSize: 12, color: '#475569', marginBottom: 6 }}>📋 {r.survey}</div>
+                      {/* Time */}
+                      <div style={{ fontSize: 11, color: '#94a3b8' }}>🕐 {r.date}</div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                /* Desktop: scrollable table */
+                <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0', overflow: 'hidden' }}>
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 600 }}>
+                      <thead>
+                        <tr style={{ background: '#f8fafc' }}>
+                          {['Name', 'Email', 'Survey Title', 'Status', 'Submitted'].map(col => (
+                            <th key={col} style={{ padding: '12px 16px', textAlign: 'left', fontSize: 11, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid #e2e8f0', whiteSpace: 'nowrap' }}>{col}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {MOCK_RESPONDENTS.map((r, i) => (
+                          <tr key={r.id} style={{ borderBottom: i < MOCK_RESPONDENTS.length - 1 ? '1px solid #e2e8f0' : 'none' }}
+                            onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'}
+                            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                          >
+                            <td style={{ padding: '14px 16px', fontWeight: 600, color: '#0f172a', fontSize: 13, whiteSpace: 'nowrap' }}>{r.name}</td>
+                            <td style={{ padding: '14px 16px', color: '#64748b', fontSize: 13 }}>{r.email}</td>
+                            <td style={{ padding: '14px 16px', color: '#475569', fontSize: 13 }}>{r.survey}</td>
+                            <td style={{ padding: '14px 16px' }}>
+                              <span style={{ padding: '2px 8px', borderRadius: 99, fontSize: 11, fontWeight: 600, background: r.status === 'Completed' ? '#dcfce7' : '#fef9c3', color: r.status === 'Completed' ? '#16a34a' : '#a16207' }}>
+                                {r.status}
+                              </span>
+                            </td>
+                            <td style={{ padding: '14px 16px', color: '#94a3b8', fontSize: 12, whiteSpace: 'nowrap' }}>{r.date}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
-          {/* PAGE 5: SETTINGS */}
+          {/* SETTINGS */}
           {activeNav === 'Settings' && (
             <div style={{ maxWidth: 540 }}>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 800, color: '#0f172a', marginBottom: 20 }}>Account Settings</h2>
@@ -566,12 +554,14 @@ export default function Dashboard() {
                 <div style={{ marginBottom: 16 }}>
                   <label style={{ fontSize: 13, fontWeight: 600, color: '#475569', display: 'block', marginBottom: 6 }}>Full Name</label>
                   <input value={settingsForm.fullName} onChange={e => setSettingsForm({ ...settingsForm, fullName: e.target.value })}
-                    style={{ width: '100%', padding: '10px 14px', borderRadius: 10, fontSize: 14, border: '1.5px solid #e2e8f0', outline: 'none', boxSizing: 'border-box' }} />
+                    style={{ width: '100%', padding: '10px 14px', borderRadius: 10, fontSize: 14, border: '1.5px solid #e2e8f0', outline: 'none', boxSizing: 'border-box' }}
+                    onFocus={e => (e.target.style.borderColor = '#0d9488')} onBlur={e => (e.target.style.borderColor = '#e2e8f0')} />
                 </div>
                 <div style={{ marginBottom: 20 }}>
                   <label style={{ fontSize: 13, fontWeight: 600, color: '#475569', display: 'block', marginBottom: 6 }}>Username</label>
                   <input value={settingsForm.username} onChange={e => setSettingsForm({ ...settingsForm, username: e.target.value })}
-                    style={{ width: '100%', padding: '10px 14px', borderRadius: 10, fontSize: 14, border: '1.5px solid #e2e8f0', outline: 'none', boxSizing: 'border-box' }} />
+                    style={{ width: '100%', padding: '10px 14px', borderRadius: 10, fontSize: 14, border: '1.5px solid #e2e8f0', outline: 'none', boxSizing: 'border-box' }}
+                    onFocus={e => (e.target.style.borderColor = '#0d9488')} onBlur={e => (e.target.style.borderColor = '#e2e8f0')} />
                 </div>
                 <button type="submit" className="sp-btn-primary" style={{ width: '100%', padding: 12 }}>Save Profile</button>
               </form>
@@ -581,7 +571,6 @@ export default function Dashboard() {
         </div>
       </main>
 
-      {/* Modals & Toasts */}
       {showNewModal && <SurveyModal mode="new" onClose={() => setShowNewModal(false)} onSave={handleCreateSurvey} />}
       {editSurvey && <SurveyModal mode="edit" survey={editSurvey} onClose={() => setEditSurvey(null)} onSave={handleEditSurvey} />}
       {deleteSurvey && <DeleteModal survey={deleteSurvey} onClose={() => setDeleteSurvey(null)} onConfirm={handleDeleteSurvey} />}
