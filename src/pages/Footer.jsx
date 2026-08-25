@@ -1,23 +1,10 @@
 import { Link } from 'react-router-dom'
+import { PRODUCT_LINKS, COMPANY_LINKS, LEGAL_LINKS } from '../siteNav'
 
 const LINKS = {
-  Product: [
-    { label: 'Features',  to: '/#features' },
-    { label: 'Analytics', to: '/#analytics' },
-    { label: 'Security',  to: '/#security'  },
-    { label: 'Pricing',   to: '/#pricing'   },
-  ],
-  Company: [
-    { label: 'About Us',  to: '/about'   },
-    { label: 'Careers',   to: '/careers' },
-    { label: 'Blog',      to: '/blog'    },
-    { label: 'Contact',   to: '/contact' },
-  ],
-  Legal: [
-    { label: 'Privacy Policy',  to: '/privacy' },
-    { label: 'Terms of Service', to: '/terms'   },
-    { label: 'Cookie Policy',   to: '/cookies' },
-  ],
+  Product: PRODUCT_LINKS,
+  Company: COMPANY_LINKS,
+  Legal: LEGAL_LINKS,
 }
 
 const SOCIALS = [
@@ -55,138 +42,112 @@ export default function Footer() {
 
   return (
     <footer style={{
-      background: '#0a0d11',
-      color: 'rgba(250,250,248,0.55)',
+      background: 'var(--surface)',
+      color: 'var(--muted)',
       fontFamily: "'Plus Jakarta Sans', sans-serif",
+      borderTop: '1px solid var(--border)',
     }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+        .sp-footer-grid {
+          display: grid;
+          grid-template-columns: 1.4fr repeat(3, 1fr);
+          gap: 32px;
+        }
+        @media (max-width: 700px) {
+          .sp-footer-grid { grid-template-columns: 1fr 1fr; gap: 32px 24px; }
+          .sp-footer-brand { grid-column: 1 / -1; }
+        }
+      `}</style>
 
       {/* ── Top section ── */}
       <div style={{
         maxWidth: 1100,
         margin: '0 auto',
         padding: 'clamp(40px,8vw,72px) 24px clamp(32px,6vw,56px)',
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
-        gap: 'clamp(32px,5vw,56px)',
       }}>
 
-        {/* Brand column */}
-        <div style={{ gridColumn: 'span 1' }}>
-          {/* Logo */}
-          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', marginBottom: 16 }}>
-            <span style={{
-              width: 34, height: 34, borderRadius: 9,
-              background: 'linear-gradient(135deg, #0d9488, #f59e0b)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 17, fontWeight: 800, color: '#fff',
-            }}>S</span>
-            <span style={{ fontWeight: 700, fontSize: 17, color: '#fff', letterSpacing: '-0.3px' }}>
-              SurveyPulse
-            </span>
-          </Link>
+        <div className="sp-footer-grid">
 
-          <p style={{ fontSize: 13, lineHeight: 1.75, maxWidth: 220, marginBottom: 24 }}>
-            The modern survey platform built for teams that move fast and listen deeply.
-          </p>
+          {/* Brand column */}
+          <div className="sp-footer-brand">
+            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', marginBottom: 16 }}>
+              <span style={{
+                width: 34, height: 34, borderRadius: 9,
+                background: 'linear-gradient(135deg, var(--teal), var(--amber))',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 17, fontWeight: 800, color: '#fff',
+              }}>S</span>
+              <span style={{ fontFamily: "'Cairo', sans-serif", fontWeight: 700, fontSize: 17, color: 'var(--ink)', letterSpacing: '-0.3px' }}>
+                SurveyPulse
+              </span>
+            </Link>
 
-          {/* Social icons */}
-          <div style={{ display: 'flex', gap: 10 }}>
-            {SOCIALS.map(({ label, href, icon }) => (
-              <a
-                key={label}
-                href={href}
-                aria-label={label}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  width: 36, height: 36, borderRadius: 8,
-                  background: 'rgba(255,255,255,0.06)',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: 'rgba(250,250,248,0.55)',
-                  transition: 'background 0.2s, color 0.2s',
-                  textDecoration: 'none',
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.background = 'rgba(13,148,136,0.2)'
-                  e.currentTarget.style.color = '#2dd4bf'
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.background = 'rgba(255,255,255,0.06)'
-                  e.currentTarget.style.color = 'rgba(250,250,248,0.55)'
-                }}
-              >{icon}</a>
-            ))}
-          </div>
-        </div>
+            <p style={{ fontSize: 13, lineHeight: 1.75, maxWidth: 260, marginBottom: 20 }}>
+              The modern survey platform built for teams that move fast and listen deeply.
+            </p>
 
-        {/* Link columns */}
-        {Object.entries(LINKS).map(([group, links]) => (
-          <div key={group}>
-            <div style={{
-              fontSize: 11, fontWeight: 700, letterSpacing: '0.1em',
-              textTransform: 'uppercase', color: 'rgba(250,250,248,0.35)',
-              marginBottom: 16,
-            }}>{group}</div>
-            <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {links.map(({ label, to }) => (
-                <li key={label}>
-                  <Link
-                    to={to}
-                    style={{ color: 'rgba(250,250,248,0.55)', fontSize: 14, textDecoration: 'none', transition: 'color 0.15s' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = '#2dd4bf')}
-                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(250,250,248,0.55)')}
-                  >{label}</Link>
-                </li>
+            {/* Social icons */}
+            <div style={{ display: 'flex', gap: 10 }}>
+              {SOCIALS.map(({ label, href, icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  aria-label={label}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    width: 36, height: 36, borderRadius: 8,
+                    background: 'var(--white)',
+                    border: '1px solid var(--border)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    color: 'var(--muted)',
+                    transition: 'background 0.2s, color 0.2s, border-color 0.2s',
+                    textDecoration: 'none',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = 'rgba(13,148,136,0.08)'
+                    e.currentTarget.style.borderColor = 'var(--teal)'
+                    e.currentTarget.style.color = 'var(--teal)'
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = 'var(--white)'
+                    e.currentTarget.style.borderColor = 'var(--border)'
+                    e.currentTarget.style.color = 'var(--muted)'
+                  }}
+                >{icon}</a>
               ))}
-            </ul>
+            </div>
           </div>
-        ))}
 
-        {/* Newsletter column */}
-        <div>
-          <div style={{
-            fontSize: 11, fontWeight: 700, letterSpacing: '0.1em',
-            textTransform: 'uppercase', color: 'rgba(250,250,248,0.35)',
-            marginBottom: 16,
-          }}>Stay in the loop</div>
-          <p style={{ fontSize: 13, lineHeight: 1.7, marginBottom: 16 }}>
-            Get product updates and insights delivered to your inbox.
-          </p>
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            <input
-              type="email"
-              placeholder="you@company.com"
-              style={{
-                flex: 1, minWidth: 140,
-                padding: '9px 14px', borderRadius: 8, fontSize: 13,
-                background: 'rgba(255,255,255,0.06)',
-                border: '1px solid rgba(255,255,255,0.1)',
-                color: '#fff', outline: 'none',
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                transition: 'border-color 0.2s',
-              }}
-              onFocus={e => (e.target.style.borderColor = '#0d9488')}
-              onBlur={e  => (e.target.style.borderColor = 'rgba(255,255,255,0.1)')}
-            />
-            <button style={{
-              padding: '9px 16px', borderRadius: 8, fontSize: 13, fontWeight: 600,
-              background: 'linear-gradient(135deg, #0d9488, #0f766e)',
-              color: '#fff', border: 'none', cursor: 'pointer',
-              whiteSpace: 'nowrap',
-              boxShadow: '0 4px 12px rgba(13,148,136,0.3)',
-              transition: 'transform 0.15s',
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-            }}
-              onMouseEnter={e => (e.currentTarget.style.transform = 'translateY(-1px)')}
-              onMouseLeave={e => (e.currentTarget.style.transform = 'none')}
-            >Subscribe</button>
-          </div>
+          {/* Link columns */}
+          {Object.entries(LINKS).map(([group, links]) => (
+            <div key={group}>
+              <div style={{
+                fontFamily: "'Cairo', sans-serif",
+                fontSize: 11, fontWeight: 700, letterSpacing: '0.1em',
+                textTransform: 'uppercase', color: 'var(--ink)', opacity: 0.45,
+                marginBottom: 16,
+              }}>{group}</div>
+              <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {links.map(({ label, to }) => (
+                  <li key={label}>
+                    <Link
+                      to={to}
+                      style={{ color: 'var(--muted)', fontSize: 14, textDecoration: 'none', transition: 'color 0.15s' }}
+                      onMouseEnter={e => (e.currentTarget.style.color = 'var(--teal)')}
+                      onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}
+                    >{label}</Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
       </div>
 
       {/* ── Divider ── */}
-      <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }} />
+      <div style={{ borderTop: '1px solid var(--border)' }} />
 
       {/* ── Bottom bar ── */}
       <div style={{
@@ -202,28 +163,16 @@ export default function Footer() {
           © {year} SurveyPulse. All rights reserved.
         </span>
 
-        <div style={{ display: 'flex', gap: 20 }}>
-          {['Privacy Policy', 'Terms of Service', 'Cookie Policy'].map(label => (
+        <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', justifyContent: 'center' }}>
+          {LEGAL_LINKS.map(({ label, to }) => (
             <Link
               key={label}
-              to="#"
-              style={{ fontSize: 12, color: 'rgba(250,250,248,0.4)', textDecoration: 'none', transition: 'color 0.15s' }}
-              onMouseEnter={e => (e.currentTarget.style.color = '#2dd4bf')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(250,250,248,0.4)')}
+              to={to}
+              style={{ fontSize: 12, color: 'var(--muted)', textDecoration: 'none', transition: 'color 0.15s' }}
+              onMouseEnter={e => (e.currentTarget.style.color = 'var(--teal)')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}
             >{label}</Link>
           ))}
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12 }}>
-          <span style={{
-            width: 7, height: 7, borderRadius: '50%',
-            background: '#22c55e',
-            display: 'inline-block',
-            boxShadow: '0 0 0 0 rgba(34,197,94,0.4)',
-            animation: 'footerPulse 2s ease-in-out infinite',
-          }} />
-          <style>{`@keyframes footerPulse { 0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,0.4)} 50%{box-shadow:0 0 0 5px rgba(34,197,94,0)} }`}</style>
-          All systems operational
         </div>
       </div>
     </footer>

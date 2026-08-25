@@ -9,6 +9,7 @@ import SurveyRespond from './pages/SurveyRespond'
 import InviteManager from './pages/InviteManager'
 import SurveyBuilder from './components/dashboard/SurveyBuilder'
 import SurveyResults from './components/dashboard/SurveyResults'
+import { ProductPage, CompanyPage, LegalPage } from './pages/StaticPages'
 
 function ProtectedRoute({ children }) {
   const { user } = useAuth()
@@ -28,6 +29,11 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+
+          {/* Navbar/footer menu pages — Products, Company, Legal */}
+          <Route path="/product/:slug" element={<ProductPage />} />
+          <Route path="/company/:slug" element={<CompanyPage />} />
+          <Route path="/legal/:slug" element={<LegalPage />} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
 
           {/* Survey management (owner only) */}
