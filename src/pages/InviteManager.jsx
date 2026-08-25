@@ -132,20 +132,31 @@ export default function InviteManager() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Sora:wght@700;800&display=swap');`}</style>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Sora:wght@700;800&display=swap');
+        .inv-topbar { padding:14px 24px; }
+        .inv-topbar-left { display:flex; align-items:center; gap:12px; min-width:0; }
+        .inv-topbar-title { font-family:'Sora',sans-serif; font-size:16px; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        @media (max-width:640px) {
+          .inv-topbar { flex-direction:column; align-items:stretch; gap:12px; }
+          .inv-topbar-left { width:100%; }
+          .inv-topbar-title { max-width:70vw; }
+          .inv-topbar-btn { width:100%; text-align:center; }
+        }
+      `}</style>
 
       {/* Topbar */}
-      <div style={{ background: '#fff', borderBottom: '1px solid #e2e8f0', padding: '0 24px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 10, flexWrap: 'wrap', gap: 8 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <button onClick={() => navigate('/dashboard')} style={{ background: 'none', border: 'none', fontSize: 13, fontWeight: 600, color: '#64748b', cursor: 'pointer' }}>← Dashboard</button>
-          <div style={{ width: 1, height: 20, background: '#e2e8f0' }} />
-          <div>
-            <div style={{ fontFamily: 'Sora,sans-serif', fontSize: 16, fontWeight: 800, color: '#0f172a' }}>{survey?.title || 'Loading…'}</div>
+      <div className="inv-topbar" style={{ background: '#fff', borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 10, flexWrap: 'wrap', gap: 12 }}>
+        <div className="inv-topbar-left">
+          <button onClick={() => navigate('/dashboard')} style={{ background: 'none', border: 'none', fontSize: 13, fontWeight: 600, color: '#64748b', cursor: 'pointer', flexShrink: 0 }}>← Dashboard</button>
+          <div style={{ width: 1, height: 20, background: '#e2e8f0', flexShrink: 0 }} />
+          <div style={{ minWidth: 0 }}>
+            <div className="inv-topbar-title">{survey?.title || 'Loading…'}</div>
             <div style={{ fontSize: 11, color: '#64748b' }}>Unique respondent links</div>
           </div>
         </div>
         {survey && (
-          <button onClick={() => navigate(`/surveys/${id}/results`)} style={{ background: '#f0fdfa', border: '1.5px solid #99f6e4', borderRadius: 8, padding: '7px 14px', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#0d9488' }}>📊 View Results</button>
+          <button className="inv-topbar-btn" onClick={() => navigate(`/surveys/${id}/results`)} style={{ background: '#f0fdfa', border: '1.5px solid #99f6e4', borderRadius: 8, padding: '7px 14px', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#0d9488' }}>📊 View Results</button>
         )}
       </div>
 

@@ -1,6 +1,63 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import api from '../../utils/api'
+
+const EXPORT_FORMATS = [
+  { key: 'excel', ext: 'xlsx', icon: '📊', label: 'Excel (.xlsx)', color: '#16a34a' },
+  { key: 'pptx',  ext: 'pptx', icon: '📑', label: 'PowerPoint (.pptx)', color: '#ea580c' },
+  { key: 'pdf',   ext: 'pdf',  icon: '📄', label: 'PDF (.pdf)', color: '#dc2626' },
+]
+
+/** Single "Download" button that opens a small menu — replaces three separate
+ *  export buttons so the topbar never overflows on narrow screens. */
+function DownloadMenu({ exporting, onExport }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef(null)
+
+  useEffect(() => {
+    const onClickOutside = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false) }
+    document.addEventListener('mousedown', onClickOutside)
+    return () => document.removeEventListener('mousedown', onClickOutside)
+  }, [])
+
+  return (
+    <div ref={ref} style={{ position: 'relative' }}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        disabled={!!exporting}
+        className="exp-btn"
+        style={{ background: '#f0fdfa', color: '#0d9488' }}
+      >
+        {exporting ? '…' : '⬇'} Download <span style={{ fontSize: 10, transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}>▾</span>
+      </button>
+      {open && (
+        <div style={{
+          position: 'absolute', top: 'calc(100% + 6px)', right: 0, minWidth: 190,
+          background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12,
+          boxShadow: '0 18px 40px rgba(15,23,42,0.16)', padding: 6, zIndex: 30,
+        }}>
+          {EXPORT_FORMATS.map(f => (
+            <button
+              key={f.key}
+              onClick={() => { onExport(f.key); setOpen(false) }}
+              disabled={!!exporting}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 10, width: '100%',
+                textAlign: 'left', padding: '9px 12px', borderRadius: 8, fontSize: 13.5,
+                fontWeight: 600, border: 'none', cursor: exporting ? 'not-allowed' : 'pointer',
+                background: 'transparent', color: f.color, fontFamily: 'inherit',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = '#f8fafc')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+            >
+              <span>{exporting === f.key ? '…' : f.icon}</span>{f.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
 
 function StatBox({ icon, label, value, color = '#0d9488' }) {
   return (
@@ -113,36 +170,32 @@ export default function SurveyResults() {
         .res-tab:not(.active) { background:#fff; color:#64748b; border:1.5px solid #e2e8f0; }
         .res-tab:not(.active):hover { border-color:#0d9488; color:#0d9488; }
         .exp-btn { padding:8px 16px; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:6px; transition:all 0.15s; }
+        .res-topbar { padding:14px 24px; }
+        .res-topbar-left { display:flex; align-items:center; gap:12px; min-width:0; }
+        .res-topbar-title { font-family:'Sora',sans-serif; font-size:16px; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .res-topbar-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+        @media (max-width:640px) {
+          .res-topbar { flex-direction:column; align-items:stretch; gap:12px; }
+          .res-topbar-left { width:100%; }
+          .res-topbar-title { max-width:60vw; }
+          .res-topbar-actions { width:100%; justify-content:flex-start; }
+        }
       `}</style>
 
       {/* Topbar */}
-      <div style={{ background:'#fff', borderBottom:'1px solid #e2e8f0', padding:'0 24px', height:60, display:'flex', alignItems:'center', justifyContent:'space-between', position:'sticky', top:0, zIndex:10, flexWrap:'wrap', gap:8 }}>
-        <div style={{ display:'flex', alignItems:'center', gap:12 }}>
-          <button onClick={() => navigate('/dashboard')} style={{ background:'none', border:'none', fontSize:13, fontWeight:600, color:'#64748b', cursor:'pointer', padding:'6px 0' }}>← Dashboard</button>
-          <div style={{ width:1, height:20, background:'#e2e8f0' }} />
-          <div>
-            <div style={{ fontFamily:'Sora,sans-serif', fontSize:16, fontWeight:800, color:'#0f172a' }}>{survey.title}</div>
+      <div className="res-topbar" style={{ background:'#fff', borderBottom:'1px solid #e2e8f0', display:'flex', alignItems:'center', justifyContent:'space-between', position:'sticky', top:0, zIndex:10, flexWrap:'wrap', gap:12 }}>
+        <div className="res-topbar-left">
+          <button onClick={() => navigate('/dashboard')} style={{ background:'none', border:'none', fontSize:13, fontWeight:600, color:'#64748b', cursor:'pointer', padding:'6px 0', flexShrink:0 }}>← Dashboard</button>
+          <div style={{ width:1, height:20, background:'#e2e8f0', flexShrink:0 }} />
+          <div style={{ minWidth:0 }}>
+            <div className="res-topbar-title">{survey.title}</div>
             <div style={{ fontSize:11, color:'#64748b' }}>Real-time results</div>
           </div>
         </div>
-        <div style={{ display:'flex', gap:8, alignItems:'center', flexWrap:'wrap' }}>
-          {/* Live badge */}
-          <div style={{ display:'flex', alignItems:'center', gap:5, background:'#f0fdf4', border:'1px solid #bbf7d0', borderRadius:99, padding:'4px 10px' }}>
-            <span style={{ width:7, height:7, borderRadius:'50%', background:'#22c55e', display:'inline-block', animation:'pulse 1.8s infinite' }} />
-            <style>{`@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}`}</style>
-            <span style={{ fontSize:11, fontWeight:700, color:'#16a34a' }}>LIVE</span>
-          </div>
+        <div className="res-topbar-actions">
           <button onClick={() => navigate(`/surveys/${id}/invites`)} style={{ background:'#fff', border:'1.5px solid #e2e8f0', borderRadius:8, padding:'7px 14px', fontSize:13, fontWeight:600, cursor:'pointer', color:'#475569' }}>👥 Invites</button>
           <button onClick={() => navigate(`/surveys/${id}/edit`)} style={{ background:'#fff', border:'1.5px solid #e2e8f0', borderRadius:8, padding:'7px 14px', fontSize:13, fontWeight:600, cursor:'pointer', color:'#475569' }}>✏️ Edit</button>
-          <button onClick={() => exportFile('excel')} disabled={!!exporting} className="exp-btn" style={{ background:'#f0fdf4', color:'#16a34a' }}>
-            {exporting==='excel'?'…':'📊'} Excel
-          </button>
-          <button onClick={() => exportFile('pptx')} disabled={!!exporting} className="exp-btn" style={{ background:'#fff7ed', color:'#ea580c' }}>
-            {exporting==='pptx'?'…':'📑'} PPT
-          </button>
-          <button onClick={() => exportFile('pdf')} disabled={!!exporting} className="exp-btn" style={{ background:'#fef2f2', color:'#dc2626' }}>
-            {exporting==='pdf'?'…':'📄'} PDF
-          </button>
+          <DownloadMenu exporting={exporting} onExport={exportFile} />
         </div>
       </div>
 

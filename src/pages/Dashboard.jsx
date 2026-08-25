@@ -11,11 +11,48 @@ const STATUS_COLORS = {
 }
 
 const TABS = ['All', 'Active', 'Draft', 'Closed']
+
+/** Clean line-icon set for the sidebar (replaces the old emoji icons).
+ *  Each icon inherits its color from the parent via `currentColor`, so the
+ *  existing active/inactive color logic below keeps working unchanged. */
+const iconProps = { width: 18, height: 18, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round' }
+
+const IconHome = () => (
+  <svg {...iconProps}>
+    <path d="M3 11.5 12 4l9 7.5" />
+    <path d="M5.5 10v9a1 1 0 0 0 1 1H9a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h2.5a1 1 0 0 0 1-1v-9" />
+  </svg>
+)
+
+const IconSurveys = () => (
+  <svg {...iconProps}>
+    <rect x="5" y="3.5" width="14" height="17" rx="2" />
+    <path d="M9 3.5V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v.5" />
+    <path d="M8.5 10h7M8.5 13.5h7M8.5 17h4.5" />
+  </svg>
+)
+
+const IconInvites = () => (
+  <svg {...iconProps}>
+    <circle cx="9" cy="8" r="3.2" />
+    <path d="M3.5 20c.6-3.5 2.9-5.5 5.5-5.5s4.9 2 5.5 5.5" />
+    <circle cx="17" cy="8.5" r="2.6" />
+    <path d="M15.2 14.8c2.3.3 4 2.1 4.5 5.2" />
+  </svg>
+)
+
+const IconSettings = () => (
+  <svg {...iconProps}>
+    <circle cx="12" cy="12" r="3" />
+    <path d="M12 3.5v2.1M12 18.4v2.1M20.5 12h-2.1M5.6 12H3.5M17.7 6.3l-1.5 1.5M7.8 16.2l-1.5 1.5M17.7 17.7l-1.5-1.5M7.8 7.8 6.3 6.3" />
+  </svg>
+)
+
 const NAV_ITEMS = [
-  { icon: '🏠', label: 'Dashboard' },
-  { icon: '📋', label: 'My Surveys' },
-  { icon: '👥', label: 'Invites' },
-  { icon: '⚙️', label: 'Settings' },
+  { Icon: IconHome, label: 'Dashboard' },
+  { Icon: IconSurveys, label: 'My Surveys' },
+  { Icon: IconInvites, label: 'Invites' },
+  { Icon: IconSettings, label: 'Settings' },
 ]
 
 function StatCard({ icon, label, value, color = '#0d9488' }) {
@@ -212,14 +249,14 @@ export default function Dashboard() {
         </div>
 
         <nav style={{ flex: 1, padding: '16px 0' }}>
-          {NAV_ITEMS.map(({ icon, label }) => {
+          {NAV_ITEMS.map(({ Icon, label }) => {
             const isActive = activeNav === label
             return (
               <div key={label} onClick={() => handleNavClick(label)} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: sidebarOpen ? '10px 20px' : '10px 16px', cursor: 'pointer', background: isActive ? 'rgba(13,148,136,0.2)' : 'transparent', borderLeft: isActive ? '3px solid #0d9488' : '3px solid transparent', transition: 'background 0.15s', margin: '2px 0' }}
                 onMouseEnter={e => { if (!isActive) e.currentTarget.style.background = 'rgba(255,255,255,0.05)' }}
                 onMouseLeave={e => { if (!isActive) e.currentTarget.style.background = 'transparent' }}
               >
-                <span style={{ fontSize: 18, flexShrink: 0 }}>{icon}</span>
+                <span style={{ display: 'flex', alignItems: 'center', flexShrink: 0, color: isActive ? '#2dd4bf' : 'rgba(255,255,255,0.55)' }}><Icon /></span>
                 {sidebarOpen && <span style={{ fontSize: 14, fontWeight: isActive ? 600 : 400, color: isActive ? '#fff' : 'rgba(255,255,255,0.55)', whiteSpace: 'nowrap' }}>{label}</span>}
               </div>
             )
@@ -295,6 +332,11 @@ export default function Dashboard() {
                 <div>
                   <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(18px,4vw,22px)', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.5px' }}>Welcome {displayName} 👋</h2>
                   <p style={{ fontSize: 13, color: '#64748b', marginTop: 4 }}>Here's what's happening with your surveys today.</p>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 5, background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 99, padding: '4px 10px' }}>
+                  <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#22c55e', display: 'inline-block', animation: 'pulse 1.8s infinite' }} />
+                  <style>{`@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}`}</style>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: '#16a34a' }}>LIVE</span>
                 </div>
               </div>
 

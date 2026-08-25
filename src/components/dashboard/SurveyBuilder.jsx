@@ -421,15 +421,33 @@ export default function SurveyBuilder() {
         .qcard { border:2px solid #e2e8f0; border-radius:12px; padding:12px 14px; margin-bottom:6px; cursor:pointer; background:#fff; transition:all 0.15s; }
         .qcard.active { border-color:#0d9488; background:#f0fdfa; }
         .qcard:hover:not(.active) { border-color:#94a3b8; }
+
+        .sb-topbar { padding:14px 24px; flex-wrap:wrap; gap:12px; }
+        .sb-topbar-title { font-family:'Sora',sans-serif; font-size:18px; font-weight:800; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .sb-topbar-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+        .sb-layout { display:flex; }
+        .sb-sidebar { width:250px; flex-shrink:0; }
+        .sb-sidebar-inner { position:sticky; top:80px; }
+
+        @media (max-width:820px) {
+          .sb-topbar { flex-direction:column; align-items:stretch; }
+          .sb-topbar-left { width:100%; justify-content:space-between; }
+          .sb-topbar-title { max-width:55vw; }
+          .sb-topbar-actions { width:100%; }
+          .sb-topbar-actions .sb-btn { flex:1; }
+          .sb-layout { flex-direction:column !important; padding:16px !important; gap:16px !important; }
+          .sb-sidebar { width:100% !important; }
+          .sb-sidebar-inner { position:static !important; top:auto !important; }
+        }
       `}</style>
 
       {/* Top bar */}
-      <div style={{ background:'#fff', borderBottom:'1px solid #e2e8f0', padding:'0 24px', height:60, display:'flex', alignItems:'center', justifyContent:'space-between', position:'sticky', top:0, zIndex:20 }}>
-        <div style={{ display:'flex', alignItems:'center', gap:12 }}>
-          <button className="sb-btn sb-ghost" onClick={() => navigate('/dashboard')} style={{ padding:'6px 14px' }}>← Back</button>
-          <h1 style={{ fontFamily:'Sora,sans-serif', fontSize:18, fontWeight:800, color:'#0f172a' }}>{isEditing ? 'Edit Survey' : 'Create Survey'}</h1>
+      <div className="sb-topbar" style={{ background:'#fff', borderBottom:'1px solid #e2e8f0', display:'flex', alignItems:'center', justifyContent:'space-between', position:'sticky', top:0, zIndex:20 }}>
+        <div className="sb-topbar-left" style={{ display:'flex', alignItems:'center', gap:12, minWidth:0 }}>
+          <button className="sb-btn sb-ghost" onClick={() => navigate('/dashboard')} style={{ padding:'6px 14px', flexShrink:0 }}>← Back</button>
+          <h1 className="sb-topbar-title">{isEditing ? 'Edit Survey' : 'Create Survey'}</h1>
         </div>
-        <div style={{ display:'flex', gap:8, alignItems:'center' }}>
+        <div className="sb-topbar-actions">
           <button className="sb-btn sb-ghost" onClick={() => setPreview(p=>!p)}>{preview ? '✏️ Edit' : '👁 Preview'}</button>
           <button className="sb-btn sb-ghost" onClick={() => save('draft')} disabled={loading}>Save Draft</button>
           <button className="sb-btn sb-primary" onClick={() => save('active')} disabled={loading}>{loading ? 'Saving…' : '🚀 Publish'}</button>
@@ -450,11 +468,11 @@ export default function SurveyBuilder() {
         </div>
       ) : (
         /* Edit mode */
-        <div style={{ display:'flex', maxWidth:1120, margin:'0 auto', padding:24, gap:24 }}>
+        <div className="sb-layout" style={{ maxWidth:1120, margin:'0 auto', padding:24, gap:24 }}>
 
           {/* Left: question list */}
-          <div style={{ width:250, flexShrink:0 }}>
-            <div style={{ background:'#fff', borderRadius:14, border:'1px solid #e2e8f0', padding:16, position:'sticky', top:80 }}>
+          <div className="sb-sidebar">
+            <div className="sb-sidebar-inner" style={{ background:'#fff', borderRadius:14, border:'1px solid #e2e8f0', padding:16 }}>
               <div style={{ fontSize:11, fontWeight:700, color:'#64748b', textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:12 }}>
                 Questions ({questions.length})
               </div>
