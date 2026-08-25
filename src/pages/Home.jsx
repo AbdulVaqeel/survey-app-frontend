@@ -260,7 +260,6 @@ function HeroIllustration() {
           <circle cx="440" cy="142" r="9" fill="#25D366" />
           <path d="M436 142 l3 3 6 -6" stroke="#fff" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
           <text x="458" y="147" fontFamily="Cairo, sans-serif" fontSize="12" fontWeight="700" fill="#12201A">SurveyMatrix</text>
-          <text x="440" y="172" fontFamily="Cairo, sans-serif" fontSize="13" fill="#5B6663" direction="rtl">كيف كانت زيارتك؟</text>
           {[0, 1, 2, 3, 4].map((i) => (
             <text key={i} x={440 + i * 16} y="192" fontSize="15" fill="#B8892B" className="sp-illo-star" style={{ animationDelay: `${1.1 + i * 0.12}s` }}>★</text>
           ))}
@@ -554,8 +553,8 @@ export default function Home() {
         {/* HERO */}
         <section className="sp-hero">
           <h1 className="sp-h1 sp-enter" style={{ animationDelay: '0.15s' }}>
-            Most CX surveys in the Kingdom get ignored.
-            <span className="sp-h1-accent">Ours get finished.</span>
+            Most CX surveys in the Kingdom get ignored
+            Ours get finished.
           </h1>
           <p className="sp-hero-sub sp-enter" style={{ animationDelay: '0.28s' }}>
             We build surveys people actually answer — Arabic first, English second, short enough
