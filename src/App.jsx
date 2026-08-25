@@ -9,7 +9,22 @@ import SurveyRespond from './pages/SurveyRespond'
 import InviteManager from './pages/InviteManager'
 import SurveyBuilder from './components/dashboard/SurveyBuilder'
 import SurveyResults from './components/dashboard/SurveyResults'
-import { ProductPage, CompanyPage, LegalPage } from './pages/StaticPages'
+
+// Products menu
+import Features from './pages/product/Features'
+import Analytics from './pages/product/Analytics'
+import Security from './pages/product/Security'
+import Pricing from './pages/product/Pricing'
+
+// Company menu
+import Careers from './pages/company/Careers'
+import Blog from './pages/company/Blog'
+import Contact from './pages/company/Contact'
+
+// Legal menu
+import Privacy from './pages/legal/Privacy'
+import Terms from './pages/legal/Terms'
+import Cookies from './pages/legal/Cookies'
 
 function ProtectedRoute({ children }) {
   const { user } = useAuth()
@@ -30,10 +45,22 @@ export default function App() {
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
 
-          {/* Navbar/footer menu pages — Products, Company, Legal */}
-          <Route path="/product/:slug" element={<ProductPage />} />
-          <Route path="/company/:slug" element={<CompanyPage />} />
-          <Route path="/legal/:slug" element={<LegalPage />} />
+          {/* Products menu — each a standalone page/file */}
+          <Route path="/product/features" element={<Features />} />
+          <Route path="/product/analytics" element={<Analytics />} />
+          <Route path="/product/security" element={<Security />} />
+          <Route path="/product/pricing" element={<Pricing />} />
+
+          {/* Company menu — each a standalone page/file */}
+          <Route path="/company/careers" element={<Careers />} />
+          <Route path="/company/blog" element={<Blog />} />
+          <Route path="/company/contact" element={<Contact />} />
+
+          {/* Legal menu — each a standalone page/file */}
+          <Route path="/legal/privacy" element={<Privacy />} />
+          <Route path="/legal/terms" element={<Terms />} />
+          <Route path="/legal/cookies" element={<Cookies />} />
+
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
 
           {/* Survey management (owner only) */}
