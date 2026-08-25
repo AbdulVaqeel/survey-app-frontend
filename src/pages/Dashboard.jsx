@@ -333,11 +333,6 @@ export default function Dashboard() {
                   <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(18px,4vw,22px)', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.5px' }}>Welcome {displayName} 👋</h2>
                   <p style={{ fontSize: 13, color: '#64748b', marginTop: 4 }}>Here's what's happening with your surveys today.</p>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 5, background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 99, padding: '4px 10px' }}>
-                  <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#22c55e', display: 'inline-block', animation: 'pulse 1.8s infinite' }} />
-                  <style>{`@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}`}</style>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: '#16a34a' }}>LIVE</span>
-                </div>
               </div>
 
               {dashError && <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 10, padding: '10px 14px', color: '#dc2626', fontSize: 13, marginBottom: 16 }}>⚠️ {dashError}</div>}
